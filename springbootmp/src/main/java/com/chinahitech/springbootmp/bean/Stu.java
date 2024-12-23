@@ -1,8 +1,11 @@
 package com.chinahitech.springbootmp.bean;
 
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class Stu {
     private int id;
     private String sid;
@@ -14,6 +17,7 @@ public class Stu {
     private String email;
     private String avatar;
     private long phone;
+    private int type;
 
     public int getId() {
         return id;

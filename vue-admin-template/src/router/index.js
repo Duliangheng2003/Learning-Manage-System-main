@@ -71,38 +71,38 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/stu/edit',
     name: 'stu',
-    meta: { title: '修改学生', icon: 'el-icon-s-help' },
+    meta: { title: '修改学生', icon: 'el-icon-s-help', roles: ['student'] },
     children: [
-     
+
       {
         // 跳转时,需要传入id
         path: 'edit',
         name: '修改学生',
         component: () => import('@/views/stu/edit'),
-        meta: { title: '修改资料', icon: 'tree' },
+        meta: { title: '修改资料', icon: 'tree'},
       }
     ]
   },
-  
+
   {
     path: '/course',
     component: Layout,
     redirect: '/course/index',
     name: '课程查看页面',
-    meta: { title: '课程页面', icon: 'el-icon-s-help' },
+    meta: { title: '课程页面', icon: 'el-icon-s-help'},
     children: [
       {
         path: 'index',
         name: '课程',
         component: () => import('@/views/course/index'),
-        meta: { title: '课程', icon: 'table' }
+        meta: { title: '课程', icon: 'table' , roles: ['student']}
       },
-      
+
       {
         path: 'detail/:id',
         name: '课程详情',
         component: () => import('@/views/course/detail'),
-        meta: { title: '课程详情', icon: 'table' },
+        meta: { title: '课程详情', icon: 'table'},
         hidden:true
       },
       {
@@ -116,6 +116,18 @@ export const constantRoutes = [
         name: '我的收藏',
         component: () => import('@/views/course/mycollection'),
         meta: { title: '我的收藏', icon: 'tree' }
+      },
+      {
+        path: 'course-registration',
+        name: '课程注册',
+        component: () => import('@/views/course/course-registration'),
+        meta: { title: '课程注册', icon: 'tree' }
+      },
+      {
+        path: 'my-learning',
+        name: '我的学习',
+        component: () => import('@/views/course/my-learning'),
+        meta: { title: '我的学习', icon: 'tree' }
       }
     ]
   },
@@ -124,7 +136,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/article/index',
     name: '文章',
-    meta: { title: '文章页面', icon: 'el-icon-s-help' },
+    meta: { title: '文章页面', icon: 'el-icon-s-help' , roles: ['user']},
     children: [
       {
         path: 'index',
@@ -145,7 +157,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/question/index',
     name: '问答',
-    meta: { title: '问答页面', icon: 'el-icon-s-help' },
+    meta: { title: '问答页面', icon: 'el-icon-s-help' , roles: ['user']},
     children: [
       {
         path: 'index',
@@ -193,7 +205,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/answer',
     name: '回答',
-    meta: { title: '回答页面', icon: 'el-icon-s-help' },
+    meta: { title: '回答页面', icon: 'el-icon-s-help' , roles: ['user']},
     hidden:true,
     children: [
       {
@@ -206,30 +218,90 @@ export const constantRoutes = [
       }
     ]
   },
+
   {
     path: '/teacher',
     component: Layout,
-    redirect: '/teacher/index',
-    name: '讲师列表',
-    meta: { title: '讲师查询', icon: 'el-icon-s-help' },
+    redirect: '/teacher',
+    name: '讲师管理',
+    meta: { title: '讲师管理', icon: 'el-icon-s-help' ,roles: ['teacher']},
     children: [
       {
-        path: 'index',
-        name: '老师',
-        component: () => import('@/views/teacher/index'),
-        meta: { title: '老师', icon: 'table' }
+        path: 'list',
+        name: '讲师列表',
+        component: () => import('@/views/teacher/list'),
+        meta: { title: '讲师列表', icon: 'table' },
+        children: [
+          {
+            path: 'index',
+            name: '老师',
+            component: () => import('@/views/teacher/index'),
+            meta: { title: '老师', icon: 'table' }
+          },
+    
+          {
+            path: 'detail/:id',
+            name: '老师首页',
+            component: () => import('@/views/teacher/detail'),
+            meta: { title: '老师首页', icon: 'table' },
+            hidden:true
+          }
+        ]
       },
-      
+      // {
+      //   path:'save',
+      //   name: '添加讲师',
+      //   component: () => import('@/views/teacher/save'),
+      //   meta: { title: '添加讲师', icon: 'tree' }
+      // },
+      // {
+      //   // 跳转时,需要传入id
+      //   path:'save/:id',
+      //   name: '修改讲师',
+      //   component: () => import('@/views/teacher/save'),
+      //   meta: { title: '修改讲师', icon: 'tree' },
+      //   hidden:true
+      // },
       {
-        path: 'detail/:id',
-        name: '老师首页',
-        component: () => import('@/views/teacher/detail'),
-        meta: { title: '老师首页', icon: 'table' },
-        hidden:true
+        path:'save',
+        name: '创建课程',
+        component: () => import('@/views/course/save'),
+        meta: { title: '创建课程', icon: 'tree' },
+      },
+      {
+        path:'save/:id',
+        name: '编排课程',
+        component: () => import('@/views/course/save'),
+        meta: { title: '编排课程', icon: 'tree' },
+        hidden:true,
+      },
+      {
+        path:'design-exercise',
+        name: '设计习题',
+        component: () => import('@/views/course/design-exercise'),
+        meta: { title: '设计习题', icon: 'tree' },
+      },
+      {
+        path: 'view-course',
+        name: '查看课程学习情况',
+        component: () => import('@/views/course/view-course'),
+        meta: { title: '查看课程学习情况', icon: 'tree' },
+      },
+      {
+        path: 'courseware-management',
+        name: '课件管理',
+        component: () => import('@/views/course/courseware-management'),
+        meta: { title: '课件管理', icon: 'tree' },
+      },
+      {
+        path: 'course-release',
+        name: '课程发布',
+        component: () => import('@/views/course/course-release'),
+        meta: { title: '课程发布', icon: 'tree' },
       }
     ]
   },
-  
+
   {
     path: 'external-link',
     component: Layout,
@@ -426,7 +498,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/article',
     component: Layout,
@@ -441,7 +513,7 @@ export const asyncRoutes = [
         meta: { title: '文章列表', icon: 'table' }
       },
       {
-        path: 'save', 
+        path: 'save',
         name: '添加文章',
         component: () => import('@/views/article/save'),
         meta: { title: '添加文章', icon: 'tree' }
@@ -456,7 +528,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  
+
 
   {
     path: '/emp',
@@ -487,7 +559,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  
+
 
   {
     path: 'external-link',
