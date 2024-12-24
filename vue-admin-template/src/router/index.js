@@ -327,16 +327,16 @@ export const constantRoutes = [
       },
       {
         path: 'teachers/:id',
-        name: '删除任课讲师',
+        name: '删除课程课件',
         component: () => import('@/views/course/teachers'),
-        meta: { title: '删除讲师', icon: 'tree' },
+        meta: { title: '删除课程课件', icon: 'tree' },
         hidden:true
       },
       {
-        path: 'lessons/:id',
-        name: '添加课程讲师',
-        component: () => import('@/views/course/lessons'),
-        meta: { title: '添加课程讲师', icon: 'tree' },
+        path: 'courseware/:id',
+        name: '添加课程课件',
+        component: () => import('@/views/course/courseware'),
+        meta: { title: '添加课程课件', icon: 'tree' },
         hidden:true
       },
       {

@@ -179,7 +179,7 @@ export default {
       this.$router.push("/course/teachers/" + id)
     },
     handleCheck3(id) {
-      this.$router.push("/course/lessons/" + id)
+      this.$router.push("/course/courseware/" + id)
     },
     handleCheck4(id) {
       this.$router.push("/course/assignment/" + id)

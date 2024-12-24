@@ -170,6 +170,23 @@ export function update(course) {
   })
 }
 
+export function getComments(id){
+  return request({
+    url: '/course/${id}/comments',
+    method: 'get',
+  })
+}
+
+export function postComment(data){
+  return request({
+    url: '/course/${data.id}/comment',
+    method: 'post',
+    data:{
+      content:data.content,
+    }
+  })
+}
+
 // 更新课程状态（0待发布，1已发布）
 export function updateCourseStatus(id, status) {
   return request({
@@ -193,6 +210,14 @@ export function getAssignmentsById(id) {
   return request({
     url: '/course/getAssignment',
     method: 'get',
+    params:{id}
+  })
+}
+
+export function listCourseware(id){
+  return request({
+    url: 'course/courseware',
+    method: 'post',
     params:{id}
   })
 }

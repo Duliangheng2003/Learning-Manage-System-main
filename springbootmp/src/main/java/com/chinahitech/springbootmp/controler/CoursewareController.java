@@ -21,7 +21,7 @@ public class CoursewareController {
     private CoursewareMapper coursewareMapper;
 
     @GetMapping("all")
-    public R findAll() {
+    public R getAll() {
         List<EduCourseware> coursewares = coursewareMapper.selectList(null);
         return R.ok().data("items", coursewares);
     }

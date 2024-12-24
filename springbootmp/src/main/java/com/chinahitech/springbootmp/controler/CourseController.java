@@ -35,6 +35,9 @@ public class CourseController {
     @Autowired
     private SubmissionMapper submissionMapper;
 
+    @Autowired
+    private CoursewareMapper coursewareMapper;
+
     @GetMapping("all")
     public R findAll()
     {
@@ -376,7 +379,7 @@ public class CourseController {
         }
     }
 
-    // TODO 新增作业
+    // 新增作业
     @PostMapping("createAssignment")
     public R createAssignment(@RequestParam int id, @RequestBody EduAssignment assignmentForm) {
         assignmentForm.setCourseId(id);
@@ -385,8 +388,7 @@ public class CourseController {
         if (i <= 0){
             return R.error();
         }
-        // TODO 推送给注册的学生
-
+        // 推送给注册的学生
         List<EduPersonal> eduPersonals = personalMapper.selectList(null);
         for(EduPersonal a:eduPersonals)
         {
@@ -413,5 +415,14 @@ public class CourseController {
             }
         }
         return R.ok().data("assignments", eduSubmissions1);
+    }
+
+    // 列出可添加的课程
+    @PostMapping("courseware")
+    public R listRestCourseware(@RequestParam int id)
+    {
+        List<EduCourseware> coursewares = coursewareMapper.selectList(null);
+        // TODO 筛选未添加的课程    
+        return R.ok().data("items",coursewares);
     }
 }

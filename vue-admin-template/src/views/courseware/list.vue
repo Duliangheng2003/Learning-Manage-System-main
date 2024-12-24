@@ -57,23 +57,23 @@
     <el-dialog
       title="课件预览"
       :visible.sync="dialogVisible"
-      width="80%"
+      width="60%"
       :before-close="handleClose">
       <div v-if="previewCourseware">
         <h2>{{ previewCourseware.title }}</h2>
         <p><strong>类型:</strong> {{ getTypeText(previewCourseware.type) }}</p>
         <p><strong>描述:</strong> {{ previewCourseware.description }}</p>
         <div v-if="previewCourseware.type === 'image'">
-          <img :src="previewCourseware.content" alt="课程图片" style="max-width: 100%; height: auto;">
+          <img :src="previewCourseware.content" alt="课程图片" style="max-width: 100%; height: 300px;">
         </div>
         <div v-else-if="previewCourseware.type === 'video'">
-          <video controls style="width: 100%;">
+          <video controls style="width: 100%;height:300px">
             <source :src="previewCourseware.content" type="video/mp4">
             您的浏览器不支持 video 标签。
           </video>
         </div>
         <div v-else-if="previewCourseware.type === 'document'">
-          <iframe :src="previewCourseware.content" style="width: 100%; height: 600px;" frameborder="0"></iframe>
+          <iframe :src="previewCourseware.content" style="width: 100%; height: 300px;" frameborder="0"></iframe>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
