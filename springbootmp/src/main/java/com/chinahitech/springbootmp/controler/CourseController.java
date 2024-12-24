@@ -38,6 +38,9 @@ public class CourseController {
     @Autowired
     private CoursewareMapper coursewareMapper;
 
+    @Autowired
+    private MaterialMapper materialMapper;
+
     @GetMapping("all")
     public R findAll()
     {
@@ -404,6 +407,7 @@ public class CourseController {
         return R.ok();
     }
 
+    // 根据学生id获取作业情况
     @GetMapping("getAssignment")
     public R getAssignmentsById(@RequestParam int id) {
         List<EduSubmission> eduSubmissions = submissionMapper.selectList(null);
@@ -417,12 +421,84 @@ public class CourseController {
         return R.ok().data("assignments", eduSubmissions1);
     }
 
-    // 列出可添加的课程
+    // 根据课程id列出可添加的课程
     @PostMapping("courseware")
     public R listRestCourseware(@RequestParam int id)
     {
-        List<EduCourseware> coursewares = coursewareMapper.selectList(null);
-        // TODO 筛选未添加的课程    
+        int flag=0;
+        List<EduMaterial> materials = materialMapper.selectList(null);
+        // 该课程已包含的课件材料
+        List<EduMaterial> materials1 = new ArrayList<>();
+        List<EduCourseware> coursewares = new ArrayList<>();
+        List<EduCourseware> all = coursewareMapper.selectList(null);
+        for(EduMaterial a : materials)
+        {
+            if(a.getCourseId()==id)
+            {
+                materials1.add(a);
+            }
+        }
+        // 筛选出未添加的课程
+        for(EduCourseware c : all)
+        {
+            flag=0;
+            for(EduMaterial m : materials1)
+            {
+                if(c.getId()==m.getCoursewareId())
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==0)
+                coursewares.add(c);
+        }
         return R.ok().data("items",coursewares);
     }
+
+    // 添加课件到相应课程
+    @PostMapping("material")
+    public R addMaterial(@RequestParam int cid, @RequestParam int mid){
+        EduMaterial eduMaterial = new EduMaterial();
+        eduMaterial.setCourseId(cid);
+        eduMaterial.setCoursewareId(mid);
+        materialMapper.insert(eduMaterial);
+        return R.ok();
+    }
+
+    // 获取课程id对应的课件
+    @PostMapping("getMaterials")
+    public R getMaterials(@RequestParam int id)
+    {
+        List<EduMaterial> eduMaterials = materialMapper.selectList(null);
+        List<EduCourseware> eduCoursewares = new ArrayList<>();
+        for(EduMaterial m:eduMaterials)
+        {
+            if(m.getCourseId()==id)
+            {
+                EduCourseware courseware = coursewareMapper.selectById(m.getCoursewareId());
+                eduCoursewares.add(courseware);
+            }
+        }
+        return R.ok().data("items",eduCoursewares);
+    }
+
+    @PostMapping("deleteMaterial")
+    public R deleteMaterial(@RequestParam int cid,@RequestParam int mid)
+    {
+        int id =-1;
+        List<EduMaterial> eduMaterials = materialMapper.selectList(null);
+        for(EduMaterial a:eduMaterials)
+        {
+            if(a.getCourseId()==cid && a.getCoursewareId()==mid)
+                id = a.getId();
+        }
+        int i = materialMapper.deleteById(id);
+        if(i > 0){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+
 }

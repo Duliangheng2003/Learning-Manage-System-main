@@ -176,7 +176,7 @@ export default {
       this.$router.push("/course/students/" + id)
     },
     handleCheck2(id) {
-      this.$router.push("/course/teachers/" + id)
+      this.$router.push("/course/materials/" + id)
     },
     handleCheck3(id) {
       this.$router.push("/course/courseware/" + id)

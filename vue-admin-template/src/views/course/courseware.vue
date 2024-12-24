@@ -49,7 +49,7 @@
   </template>
   
   <script>
-  import { listCourseware, addLessons} from '@/api/course'
+  import { listCourseware, addMaterial} from '@/api/course'
 
   
   export default {
@@ -101,7 +101,7 @@
         }
       },
       handleEdit(id) {
-        addLessons(this.$route.params.id, id).then(response => {
+        addMaterial(this.$route.params.id, id).then(response => {
           // 提示信息
           this.$message({
             type: 'success',

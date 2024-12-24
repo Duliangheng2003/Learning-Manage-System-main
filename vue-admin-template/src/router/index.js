@@ -326,9 +326,9 @@ export const constantRoutes = [
         hidden:true
       },
       {
-        path: 'teachers/:id',
+        path: 'materials/:id',
         name: '删除课程课件',
-        component: () => import('@/views/course/teachers'),
+        component: () => import('@/views/course/materials'),
         meta: { title: '删除课程课件', icon: 'tree' },
         hidden:true
       },

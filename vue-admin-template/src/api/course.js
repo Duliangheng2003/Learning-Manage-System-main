@@ -206,6 +206,7 @@ export function createAssignment(id, assignmentForm) {
   })
 }
 
+// 根据学生id获取作业情况
 export function getAssignmentsById(id) {
   return request({
     url: '/course/getAssignment',
@@ -214,10 +215,38 @@ export function getAssignmentsById(id) {
   })
 }
 
+// 根据课程id列出课件
 export function listCourseware(id){
   return request({
     url: 'course/courseware',
     method: 'post',
     params:{id}
+  })
+}
+
+// 添加课件到对应课程
+export function addMaterial(cid,mid){
+  return request({
+    url: 'course/material',
+    method: 'post',
+    params:{cid,mid}
+  })
+}
+
+// 获取该课程对应的课件
+export function getMaterials(id){
+  return request({
+    url: '/course/getMaterials',
+    method: 'post',
+    params:{id}
+  })
+}
+
+// 删除该课程的课件
+export function deleteMaterial(cid,mid){
+  return request({
+    url: 'course/deleteMaterial',
+    method: 'post',
+    params:{cid,mid}
   })
 }
