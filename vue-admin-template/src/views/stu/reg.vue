@@ -6,7 +6,7 @@
   <el-form-item label="id">
     <el-input v-model="stu.id"></el-input>
   </el-form-item>
-  <el-form-item label="学生姓名">
+  <el-form-item label="姓名">
     <el-input v-model="stu.sname"></el-input>
   </el-form-item>
 
@@ -21,7 +21,7 @@
    <el-form-item label="年龄">
     <el-input v-model="stu.age"></el-input>
   </el-form-item>
- 
+
   <el-form-item label="生日">
   <div class="block">
     <el-date-picker
@@ -94,7 +94,7 @@ export default {
         // console.log("http://localhost:8080"+res)
       },
       beforeAvatarUpload(file) {
-        
+
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isJPG) {
@@ -104,15 +104,15 @@ export default {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
-      
+
      },
       onSubmit() {
-        
+
           this.addInfo(this.stu)
       },
      updateInfo(stu){
         update(stu).then(reponse=>{
-         
+
         })
       },
       addInfo(stu){
@@ -131,10 +131,10 @@ export default {
            console.log(stu)
             // 跳转到列表页
             this.$router.push({path:"/login"})
-            
+
         })
       }
     }
 }
-  
+
 </script>

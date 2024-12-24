@@ -14,15 +14,16 @@ export default {
   components: { adminDashboard, editorDashboard },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      currentRole: 'adminDashboard'  // 默认角色
     }
   },
   computed: {
     ...mapGetters([
-      'roles'
+      'roles'  // 获取用户角色
     ])
   },
   created() {
+    // 判断用户角色并跳转
     if (!this.roles.includes('admin')) {
       this.currentRole = 'editorDashboard'
     }

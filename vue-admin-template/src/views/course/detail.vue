@@ -50,7 +50,12 @@
         </el-table-column>
       </el-table>
     </div>
-    <div></div>
+    <el-button
+      type="primary"
+      @click="goToQuestionPage"
+      style="margin-top: 30px">
+      讨论区
+    </el-button>
   </div>
 </template>
 
@@ -73,6 +78,8 @@
   margin: 0 auto;
   margin-block: 30px;
 }
+
+
 </style>
 
 <script>
@@ -82,16 +89,20 @@ export default {
     return {
       course: "",
       teachers: [],
+      comments: [],  // 评论列表
+      newComment: "",  // 新评论的内容
+      loadingComment: false,  // 提交评论时的加载状态
     };
   },
   created() {
     this.watchCourse(this.$route.params.id),
       this.getTeachers(this.$route.params.id);
+      this.fetchcomments(this.$route.params.id);
   },
   methods: {
      getLink(){
                 window.location.href = this.course.link
-            
+
         },
     getDetail(id) {
       this.$router.push("/teacher/detail/" + id);
@@ -107,6 +118,11 @@ export default {
         this.teachers = response.data.teachers;
       });
     },
+    fetchcomments(id) {
+      get(id).then((res) => {
+        this.comments = res.data.course.comments;
+      });
+    },
     handleClick() {
       this.$router.go(-1);
     },
@@ -119,6 +135,9 @@ export default {
       watchCourse(this.$route.params.id).then((res) => {
         this.fetchQ(this.$route.params.id);
       });
+    },
+    goToQuestionPage() {
+      this.$router.push("/question/index");
     },
   },
 };
