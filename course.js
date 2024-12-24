@@ -186,38 +186,3 @@ export function postComment(data){
     }
   })
 }
-
-// 更新课程状态（0待发布，1已发布）
-export function updateCourseStatus(id, status) {
-  return request({
-    url: '/course/updateStatus',
-    method: 'post',
-    params:{id,status}
-  })
-}
-
-// 新增作业
-export function createAssignment(id, assignmentForm) {
-  return request({
-    url: '/course/createAssignment',
-    method: 'post',
-    params:{id},
-    data:assignmentForm
-  })
-}
-
-export function getAssignmentsById(id) {
-  return request({
-    url: '/course/getAssignment',
-    method: 'get',
-    params:{id}
-  })
-}
-
-export function listCourseware(id){
-  return request({
-    url: 'course/courseware',
-    method: 'post',
-    params:{id}
-  })
-}

@@ -1,9 +1,11 @@
 package com.chinahitech.springbootmp.bean;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class EduCourse {
     private int id;
     private String name;
@@ -29,6 +31,8 @@ public class EduCourse {
     private int through;
 
     private int contain;
+
+    private int status;
 
     public int getContain() {
         return contain;

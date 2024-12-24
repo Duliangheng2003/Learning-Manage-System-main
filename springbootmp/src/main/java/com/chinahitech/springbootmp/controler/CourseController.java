@@ -29,6 +29,15 @@ public class CourseController {
     @Autowired
     private CollectionMapper collectionMapper;
 
+    @Autowired
+    private AssignmentMapper assignmentMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private CoursewareMapper coursewareMapper;
+
     @GetMapping("all")
     public R findAll()
     {
@@ -75,6 +84,7 @@ public class CourseController {
         }
     }
 
+    // 根据课程id获取对应学生
     @PostMapping("students")
     public R getStudent(@RequestParam int id)
     {
@@ -354,5 +364,65 @@ public class CourseController {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    // 更新课程状态
+    @PostMapping("updateStatus")
+    public R updateStatus(@RequestParam int id, @RequestParam int status) {
+        EduCourse course = courseMapper.selectById(id);
+        course.setStatus(status);
+        int i = courseMapper.updateById(course);
+        if (i > 0){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+
+    // 新增作业
+    @PostMapping("createAssignment")
+    public R createAssignment(@RequestParam int id, @RequestBody EduAssignment assignmentForm) {
+        assignmentForm.setCourseId(id);
+
+        int i = assignmentMapper.insert(assignmentForm);
+        if (i <= 0){
+            return R.error();
+        }
+        // 推送给注册的学生
+        List<EduPersonal> eduPersonals = personalMapper.selectList(null);
+        for(EduPersonal a:eduPersonals)
+        {
+            if(a.getCid()==id)
+            {
+                EduSubmission submission = new EduSubmission();
+                submission.setStuId(a.getSid());
+                submission.setAssId(assignmentForm.getId());
+                submission.setName(assignmentForm.getName());
+                submissionMapper.insert(submission);
+            }
+        }
+        return R.ok();
+    }
+
+    @GetMapping("getAssignment")
+    public R getAssignmentsById(@RequestParam int id) {
+        List<EduSubmission> eduSubmissions = submissionMapper.selectList(null);
+        List<EduSubmission> eduSubmissions1 = new ArrayList<>();
+        for (EduSubmission e : eduSubmissions) {
+            // TODO 根据课程id查找
+            if (e.getStuId() == id){
+                eduSubmissions1.add(e);
+            }
+        }
+        return R.ok().data("assignments", eduSubmissions1);
+    }
+
+    // 列出可添加的课程
+    @PostMapping("courseware")
+    public R listRestCourseware(@RequestParam int id)
+    {
+        List<EduCourseware> coursewares = coursewareMapper.selectList(null);
+        // TODO 筛选未添加的课程    
+        return R.ok().data("items",coursewares);
     }
 }
