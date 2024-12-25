@@ -164,31 +164,17 @@ export const constantRoutes = [
         name: '学习任务',
         component: () => import('@/views/study/studytask'),
         meta: { title: '学习任务', icon: 'tree' }
+      },
+      {
+        path: 'material/:id',
+        name: '任务详情',
+        component: () => import('@/views/study/material'),
+        meta: { title: '任务详情', icon: 'tree' },
+        hidden:true
       }
     ]
   },
 
-  // {
-  //   path: '/article',
-  //   component: Layout,
-  //   redirect: '/article/index',
-  //   name: '文章',
-  //   meta: { title: '文章页面', icon: 'el-icon-s-help' , roles: ['student']},
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: '文章主页',
-  //       component: () => import('@/views/article/index'),
-  //       meta: { title: '文章', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'new',
-  //       name: '发布',
-  //       component: () => import('@/views/article/new'),
-  //       meta: { title: '发布', icon: 'tree' }
-  //     },
-  //   ]
-  // },
   {
     path: '/question',
     component: Layout,
@@ -290,42 +276,6 @@ export const constantRoutes = [
     name: '课程管理',
     meta: { title: '课程管理', icon: 'el-icon-s-help' ,roles: ['teacher']},
     children: [
-      // {
-      //   path: 'list',
-      //   name: '讲师列表',
-      //   component: () => import('@/views/teacher/list'),
-      //   meta: { title: '讲师列表', icon: 'table' },
-      //   children: [
-      //     {
-      //       path: 'index',
-      //       name: '老师',
-      //       component: () => import('@/views/teacher/index'),
-      //       meta: { title: '老师', icon: 'table' }
-      //     },
-
-      //     {
-      //       path: 'detail/:id',
-      //       name: '老师首页',
-      //       component: () => import('@/views/teacher/detail'),
-      //       meta: { title: '老师首页', icon: 'table' },
-      //       hidden:true
-      //     }
-      //   ]
-      // },
-      // {
-      //   path:'save',
-      //   name: '添加讲师',
-      //   component: () => import('@/views/teacher/save'),
-      //   meta: { title: '添加讲师', icon: 'tree' }
-      // },
-      // {
-      //   // 跳转时,需要传入id
-      //   path:'save/:id',
-      //   name: '修改讲师',
-      //   component: () => import('@/views/teacher/save'),
-      //   meta: { title: '修改讲师', icon: 'tree' },
-      //   hidden:true
-      // },
       /**
        * 课程列表页
        */
@@ -443,36 +393,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on admin roles
  */
 export const asyncRoutes = [
-  // {
-  //   path: '/teacher',
-  //   component: Layout,
-  //   redirect: '/teacher/list',
-  //   name: '讲师管理',
-  //   meta: { title: '讲师管理', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'list',
-  //       name: '讲师列表',
-  //       component: () => import('@/views/teacher/list'),
-  //       meta: { title: '讲师列表', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'save',
-  //       name: '添加讲师',
-  //       component: () => import('@/views/teacher/save'),
-  //       meta: { title: '添加讲师', icon: 'tree' }
-  //     },
-  //     // 修改讲师的路由,因为修改讲师也是跳转到save页面因此不让其显示
-  //     {
-  //       // 跳转时,需要传入id
-  //       path: 'save/:id',
-  //       name: '修改讲师',
-  //       component: () => import('@/views/teacher/save'),
-  //       meta: { title: '修改讲师', icon: 'tree' },
-  //       hidden:true
-  //     }
-  //   ]
-  // },
 
   {
     path: '/admin',
@@ -481,42 +401,6 @@ export const asyncRoutes = [
     name: '课程管理',
     meta: { title: '课程管理', icon: 'el-icon-s-help' ,roles: ['admin']},
     children: [
-      // {
-      //   path: 'list',
-      //   name: '讲师列表',
-      //   component: () => import('@/views/teacher/list'),
-      //   meta: { title: '讲师列表', icon: 'table' },
-      //   children: [
-      //     {
-      //       path: 'index',
-      //       name: '老师',
-      //       component: () => import('@/views/teacher/index'),
-      //       meta: { title: '老师', icon: 'table' }
-      //     },
-
-      //     {
-      //       path: 'detail/:id',
-      //       name: '老师首页',
-      //       component: () => import('@/views/teacher/detail'),
-      //       meta: { title: '老师首页', icon: 'table' },
-      //       hidden:true
-      //     }
-      //   ]
-      // },
-      // {
-      //   path:'save',
-      //   name: '添加讲师',
-      //   component: () => import('@/views/teacher/save'),
-      //   meta: { title: '添加讲师', icon: 'tree' }
-      // },
-      // {
-      //   // 跳转时,需要传入id
-      //   path:'save/:id',
-      //   name: '修改讲师',
-      //   component: () => import('@/views/teacher/save'),
-      //   meta: { title: '修改讲师', icon: 'tree' },
-      //   hidden:true
-      // },
       /**
        * 课程列表页
        */
@@ -637,104 +521,31 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/admin',
+    path: '/user',
     component: Layout,
-    redirect: '/admin/list',
+    redirect: '/user/list',
     name: 'stu',
     meta: { title: '用户管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'list',
         name: 'list',
-        component: () => import('@/views/admin/list'),
+        component: () => import('@/views/user/list'),
         meta: { title: '用户列表', icon: 'table' }
       },
       {
         path: 'save',
         name: '添加用户',
-        component: () => import('@/views/admin/save'),
+        component: () => import('@/views/user/save'),
         meta: { title: '添加用户', icon: 'tree' }
       },
       {
         // 跳转时,需要传入id
         path: 'save/:id',
-        name: '修改学生',
-        component: () => import('@/views/admin/save'),
-        meta: { title: '修改学生', icon: 'tree' },
+        name: '修改用户',
+        component: () => import('@/views/user/save'),
+        meta: { title: '修改用户', icon: 'tree' },
         hidden:true
-      }
-    ]
-  },
-
-  // {
-  //   path: '/article',
-  //   component: Layout,
-  //   redirect: '/article/list',
-  //   name: 'article',
-  //   meta: { title: '文章管理', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'list',
-  //       name: '文章列表',
-  //       component: () => import('@/views/article/list'),
-  //       meta: { title: '文章列表', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'save',
-  //       name: '添加文章',
-  //       component: () => import('@/views/article/save'),
-  //       meta: { title: '添加文章', icon: 'tree' }
-  //     },
-  //     {
-  //       // 跳转时,需要传入id
-  //       path: 'save/:id',
-  //       name: '修改文章',
-  //       component: () => import('@/views/article/save'),
-  //       meta: { title: '修改文章', icon: 'tree' },
-  //       hidden:true
-  //     }
-  //   ]
-  // },
-
-
-  // {
-  //   path: '/emp',
-  //   component: Layout,
-  //   redirect: '/emp/list',
-  //   name: 'emp',
-  //   meta: { title: '员工管理', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'list',
-  //       name: '员工列表',
-  //       component: () => import('@/views/emp/list'),
-  //       meta: { title: '员工列表', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'save',
-  //       name: '添加员工',
-  //       component: () => import('@/views/emp/save'),
-  //       meta: { title: '添加员工', icon: 'tree' }
-  //     },
-  //     {
-  //       // 跳转时,需要传入id
-  //       path: 'save/:id',
-  //       name: '修改员工',
-  //       component: () => import('@/views/emp/save'),
-  //       meta: { title: '修改员工', icon: 'tree' },
-  //       hidden:true
-  //     }
-  //   ]
-  // },
-
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
       }
     ]
   },

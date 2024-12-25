@@ -259,6 +259,15 @@ export function getMaterials(id){
   })
 }
 
+// 根据id获取课件
+export function getMaterialById(id){
+  return request({
+    url: '/course/getMaterialById',
+    method: 'post',
+    params:{id}
+  })
+}
+
 // 删除该课程的课件
 export function deleteMaterial(cid,mid){
   return request({

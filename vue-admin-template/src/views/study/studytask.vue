@@ -25,7 +25,7 @@
             {{ lecture.description }}
           </div>
           <div class="lecture-actions">
-            <el-button type="primary" @click="viewLecture(lecture.id)">查看课件</el-button>
+            <el-button type="primary" @click="navigateToLecture(lecture.id)">查看课件</el-button>
           </div>
         </el-card>
       </el-card>
@@ -39,7 +39,7 @@
 
     <div v-else class="no-course-selected">
       <el-card class="no-course-selected-card" shadow="hover">
-        <h2>请选择一个课程以查看其课件列表</h2>
+        <h2>选择课程以查看学习任务</h2>
       </el-card>
     </div>
   </div>
@@ -81,6 +81,11 @@ h2 {
 .lecture-description {
   margin-bottom: 20px;
 }
+
+.actions {
+  margin-top: 20px;
+  text-align: right;
+}
 </style>
 
 <script>
@@ -114,9 +119,8 @@ export default {
         }
       });
     },
-    viewLecture(lectureId) {
-      // 这里可以添加跳转到具体课件详情的逻辑
-      this.$router.push(`/course/lecture/${lectureId}`);
+    navigateToLecture(id) {
+      this.$router.push("/study/material/" + id);
     }
   }
 };

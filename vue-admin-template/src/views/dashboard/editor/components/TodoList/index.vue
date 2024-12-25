@@ -1,125 +1,109 @@
 <template>
-  <section class="todoapp">
-    <!-- header -->
-    <header class="header">
-      <input class="new-todo" autocomplete="off" placeholder="Todo List" @keyup.enter="addTodo">
-    </header>
-    <!-- main section -->
-    <section v-show="todos.length" class="main">
-      <input id="toggle-all" :checked="allChecked" class="toggle-all" type="checkbox" @change="toggleAll({ done: !allChecked })">
-      <label for="toggle-all" />
-      <ul class="todo-list">
-        <todo
-          v-for="(todo, index) in filteredTodos"
-          :key="index"
-          :todo="todo"
-          @toggleTodo="toggleTodo"
-          @editTodo="editTodo"
-          @deleteTodo="deleteTodo"
-        />
-      </ul>
-    </section>
-    <!-- footer -->
-    <footer v-show="todos.length" class="footer">
-      <span class="todo-count">
-        <strong>{{ remaining }}</strong>
-        {{ remaining | pluralize('item') }} left
-      </span>
-      <ul class="filters">
-        <li v-for="(val, key) in filters" :key="key">
-          <a :class="{ selected: visibility === key }" @click.prevent="visibility = key">{{ key | capitalize }}</a>
-        </li>
-      </ul>
-      <!-- <button class="clear-completed" v-show="todos.length > remaining" @click="clearCompleted">
-        Clear completed
-      </button> -->
-    </footer>
-  </section>
+  <div class="todo-list-container">
+    <!-- 标题 -->
+    <h2>待办事项</h2>
+
+    <!-- 状态筛选 -->
+    <el-radio-group v-model="filterStatus" @change="handleFilterChange" style="margin-bottom: 5px;">
+      <el-radio :label="0">待完成</el-radio>
+      <el-radio :label="1">已完成</el-radio>
+    </el-radio-group>
+
+    <!-- 待办事项列表 -->
+    <el-table
+      :data="filteredAssignments.slice(0, 5)"
+      style="width: 100%">
+      <el-table-column
+        label="标题"
+        width="150"
+        prop="name">
+      </el-table-column>
+      <el-table-column label="截止日期">
+        <template slot-scope="scope">
+          {{ formatDate(scope.row.dueDate) }}
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 查看更多按钮 -->
+    <el-button
+      v-if="filteredAssignments.length > 5"
+      type="text"
+      @click="viewAllAssignments"
+      style="margin-top: 5px;"
+    >
+      查看更多
+    </el-button>
+  </div>
 </template>
 
 <script>
-import Todo from './Todo.vue'
+import { getAssignmentsById } from '@/api/course'
+import { getToken } from '@/utils/auth'
 
-const STORAGE_KEY = 'todos'
-const filters = {
-  all: todos => todos,
-  active: todos => todos.filter(todo => !todo.done),
-  completed: todos => todos.filter(todo => todo.done)
-}
-const defalutList = [
-  { text: 'java', done: false },
-  { text: 'python', done: false },
-  { text: '写一篇文章', done: false },
-  { text: '回答一个问题', done: true },
-  { text: '发布一个问题', done: true },
-  { text: '学习c语言', done: true },
-]
 export default {
-  components: { Todo },
-  filters: {
-    pluralize: (n, w) => n === 1 ? w : w + 's',
-    capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
-  },
   data() {
     return {
-      visibility: 'all',
-      filters,
-      // todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY)) || defalutList
-      todos: defalutList
+      assignments: [], // 作业列表数据
+      filterStatus: 0 // 默认显示待完成的作业
     }
   },
   computed: {
-    allChecked() {
-      return this.todos.every(todo => todo.done)
-    },
-    filteredTodos() {
-      return filters[this.visibility](this.todos)
-    },
-    remaining() {
-      return this.todos.filter(todo => !todo.done).length
+    filteredAssignments() {
+      if (this.filterStatus === '') {
+        return this.assignments;
+      } else {
+        return this.assignments.filter(assignment => assignment.status === this.filterStatus);
+      }
     }
   },
+  created() {
+    this.getAssignments()
+  },
   methods: {
-    setLocalStorage() {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.todos))
-    },
-    addTodo(e) {
-      const text = e.target.value
-      if (text.trim()) {
-        this.todos.push({
-          text,
-          done: false
-        })
-        this.setLocalStorage()
-      }
-      e.target.value = ''
-    },
-    toggleTodo(val) {
-      val.done = !val.done
-      this.setLocalStorage()
-    },
-    deleteTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1)
-      this.setLocalStorage()
-    },
-    editTodo({ todo, value }) {
-      todo.text = value
-      this.setLocalStorage()
-    },
-    clearCompleted() {
-      this.todos = this.todos.filter(todo => !todo.done)
-      this.setLocalStorage()
-    },
-    toggleAll({ done }) {
-      this.todos.forEach(todo => {
-        todo.done = done
-        this.setLocalStorage()
+    getAssignments() {
+      getAssignmentsById(getToken()).then(response => {
+        this.assignments = response.data.assignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
       })
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${month}-${day}`;
+    },
+    handleFilterChange(value) {
+      // 不需要重置当前页码，因为没有分页
+    },
+    viewAllAssignments() {
+      // 导航到完整的待办事项列表页面
+      this.$router.push('/stu/todolist')
     }
   }
 }
 </script>
 
-<style lang="scss">
-  @import './index.scss';
+<style scoped>
+.todo-list-container {
+  padding: 5px 15px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.el-table {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.el-button {
+  margin-top: 5px;
+}
 </style>
+
+
+

@@ -504,6 +504,13 @@ public class CourseController {
         return R.ok().data("items",eduCoursewares);
     }
 
+    // 根据id查询课件
+    @PostMapping("getMaterialById")
+    public R getMaterialById(@RequestParam int id){
+        EduCourseware eduCourseware = coursewareMapper.selectById(id);
+        return R.ok().data("material", eduCourseware);
+    }
+
     @PostMapping("deleteMaterial")
     public R deleteMaterial(@RequestParam int cid,@RequestParam int mid)
     {

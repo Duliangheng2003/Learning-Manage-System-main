@@ -7,12 +7,11 @@
           <div class="carousel-item">
             <img :src="item.logo" alt="课程图片" class="carousel-image" />
             <div class="carousel-text">
-              <h2>{{ item.title }}</h2>
+              <h2>{{ item.name }}</h2>
             </div>
           </div>
         </el-carousel-item>
       </el-carousel>
-
 
       <div id="latest-courses">
         <h2>最新课程</h2>
@@ -32,8 +31,6 @@
       <el-input class="input-item" placeholder="请输入内容" v-model="input" style="width: 800px" clearable>
       </el-input>
       <el-button size="small" class="input-button" @click="searchCourse(input)">查询</el-button>
-
-
 
       <!-- 排序方式按钮 -->
       <div class="sort-buttons">
@@ -129,13 +126,18 @@
   position: relative;
   text-align: center;
   color: white;
-  background: #000;
+  cursor: pointer;
 }
 
 .carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.carousel-image:hover {
+  transform: scale(1.05);
 }
 
 .carousel-text {
@@ -145,6 +147,12 @@
   background: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 8px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.carousel-item:hover .carousel-text {
+  opacity: 1;
 }
 
 .course-logo {
@@ -167,17 +175,6 @@
 .sort-order-buttons el-button {
   margin-right: 10px;
 }
-
-.course-logo {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.course-info {
-  margin-top: 10px;
-}
 </style>
 
 <script>
@@ -189,11 +186,12 @@ import {
   getContain,
 } from "@/api/course";
 import { getToken } from "@/utils/auth";
+
 export default {
   data() {
     return {
       courses: [],
-      carouselCourses: [],  //轮播图数据
+      carouselCourses: [],  // 轮播图数据
       latestCourses: [], // 最新课程数据
       pagesize: 3,
       currentPage: 1,
@@ -204,20 +202,17 @@ export default {
     };
   },
   created() {
-    this.fetchData(), this.$route.params.id;
+    this.fetchData();
   },
   methods: {
     fetchData() {
       getAll().then((response) => {
         this.courses = response.data.items;
         this.carouselCourses = response.data.items.slice(0, 5); // 取前5个课程
-        this.sortByZanCourses = this.courses
-         .sort((a, b) => b.zan - a.zan);
         this.latestCourses = this.courses
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .slice(0, 3); // 取前 3 个最新课程
       });
-
     },
     getDetail(id) {
       this.$router.push("/course/detail/" + id);
@@ -283,8 +278,20 @@ export default {
       this.sortOrder = sortOrder;
       this.sortCourses();
     },
+    sortCourses() {
+      if (!this.sortBy) return;
 
+      const orderMultiplier = this.sortOrder === 'asc' ? 1 : -1;
+      this.courses.sort((a, b) => {
+        if (typeof a[this.sortBy] === 'string' && typeof b[this.sortBy] === 'string') {
+          return a[this.sortBy].localeCompare(b[this.sortBy]) * orderMultiplier;
+        }
+        return (a[this.sortBy] - b[this.sortBy]) * orderMultiplier;
+      });
+    },
   },
-
 };
 </script>
+
+
+
