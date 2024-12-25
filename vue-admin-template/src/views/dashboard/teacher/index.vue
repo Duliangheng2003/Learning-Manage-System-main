@@ -1,13 +1,15 @@
 <template>
   <div class="dashboard-editor-container">
     <!-- 第一行，包含用户头像、姓名、角色和介绍信息 -->
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <div class=" clearfix">
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:16px;"> <!-- 减少第一行的 margin-bottom -->
+      <div class="clearfix">
         <!-- 用户头像和姓名 -->
         <pan-thumb :image="avatar" style="float: left">
           姓名:<br>
           <span class="pan-info-roles">{{ name }}</span>
         </pan-thumb>
+        <!-- GitHub 角标 -->
+        <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
         <!-- 用户介绍信息 -->
         <div class="info-container">
           <span class="display_name"><br>{{ introduction }}</span>
@@ -15,21 +17,18 @@
         </div>
       </div>
     </el-row>
+
     <!-- 第二行，包含待办事项列表、交易表格和卡片组件 -->
-    <el-row :gutter="8">
-      <!-- 待办事项列表，占据不同屏幕尺寸下的不同列数 -->
-      <el-col :xs="{ span: 24 }" :sm="{ span: 12 }" :md="{ span: 12 }" :lg="{ span: 6 }" :xl="{ span: 6 }"
-        style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
+    <el-row :gutter="8" style="margin-top: 0;"> <!-- 调整第二行的 margin-top 为 0，去掉默认间距 -->
       <!-- 交易表格，占据不同屏幕尺寸下的不同列数 -->
-      <el-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }" :lg="{ span: 12 }" :xl="{ span: 12 }"
-        style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{ span: 36 }" :sm="{ span: 36 }" :md="{ span: 36 }" :lg="{ span: 18 }" :xl="{ span: 18 }"
+        style="padding-right:8px;margin-bottom:16px;"> <!-- 减少 margin-bottom 值 -->
         <transaction-table />
       </el-col>
+
       <!-- 卡片组件，占据不同屏幕尺寸下的不同列数 -->
       <el-col :xs="{ span: 24 }" :sm="{ span: 12 }" :md="{ span: 12 }" :lg="{ span: 6 }" :xl="{ span: 6 }"
-        style="margin-bottom:30px;">
+        style="margin-bottom:16px;"> <!-- 减少 margin-bottom 值 -->
         <box-card />
       </el-col>
     </el-row>

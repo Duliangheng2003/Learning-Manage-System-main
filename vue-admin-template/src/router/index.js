@@ -413,50 +413,15 @@ export const asyncRoutes = [
       {
         path:'save',
         name: '创建课程',
-        component: () => import('@/views/course/save'),
+        component: () => import('@/views/admin/save'),
         meta: { title: '创建课程', icon: 'tree' },
       },
       {
         path:'save/:id',
         name: '修改课程',
-        component: () => import('@/views/course/save'),
+        component: () => import('@/views/admin/save'),
         meta: { title: '修改课程', icon: 'tree' },
         hidden:true,
-      },
-      {
-        path: 'students/:id',
-        name: '查看名单',
-        component: () => import('@/views/course/students'),
-        meta: { title: '查看名单', icon: 'tree' },
-        hidden:true
-      },
-      {
-        path: 'collections/:id',
-        name: '查看收藏学生',
-        component: () => import('@/views/course/collections'),
-        meta: { title: '查看收藏学生', icon: 'tree' },
-        hidden:true
-      },
-      {
-        path: 'materials/:id',
-        name: '删除课程课件',
-        component: () => import('@/views/course/materials'),
-        meta: { title: '删除课程课件', icon: 'tree' },
-        hidden:true
-      },
-      {
-        path: 'courseware/:id',
-        name: '添加课程课件',
-        component: () => import('@/views/course/courseware'),
-        meta: { title: '添加课程课件', icon: 'tree' },
-        hidden:true
-      },
-      {
-        path:'assignment/:id',
-        name: '布置作业',
-        component: () => import('@/views/course/assignment'),
-        meta: { title: '布置作业', icon: 'tree' },
-        hidden:true
       }
     ]
   },

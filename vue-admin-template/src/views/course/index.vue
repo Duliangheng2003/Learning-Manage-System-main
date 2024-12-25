@@ -3,7 +3,7 @@
     <el-form ref="form" label-width="300px" @keyup.enter.native="searchCourse(input)">
       <!-- 轮播图 -->
       <el-carousel height="400px" :autoplay="true" indicator-position="outside" type="card">
-        <el-carousel-item v-for="(item, index) in carouselCourses" :key="index" @click="getDetail(item.id)">
+        <el-carousel-item v-for="(item, index) in filteredCarouselCourses" :key="index" @click="getDetail(item.id)">
           <div class="carousel-item">
             <img :src="item.logo" alt="课程图片" class="carousel-image" />
             <div class="carousel-text">
@@ -16,12 +16,12 @@
       <div id="latest-courses">
         <h2>最新课程</h2>
         <el-row :gutter="20">
-          <el-col v-for="course in latestCourses" :key="course.id" :span="8" @click="getDetail(course.id)">
+          <el-col v-for="course in filteredLatestCourses" :key="course.id" :span="8" @click="getDetail(course.id)">
             <el-card shadow="hover">
               <img :src="course.logo" alt="课程图片" @click="getDetail(course.id)" class="course-logo" />
               <div class="course-info">
-                <h3 @click="getDetail(course.id)">{{ course.name }}</h3>
-                <p>{{ course.title }}</p>
+                <h3 class="truncate hover-show-full" :title="course.name">{{ course.name }}</h3>
+                <p class="truncate hover-show-full" :title="course.title">{{ course.title }}</p>
               </div>
             </el-card>
           </el-col>
@@ -59,22 +59,22 @@
     </el-form>
     <!-- 课程列表 -->
     <el-row :gutter="60">
-      <el-col :span="8" v-for="course in courses.slice(
+      <el-col :span="8" v-for="course in filteredCourses.slice(
         (currentPage - 1) * pagesize,
         currentPage * pagesize
       )" :key="course.id">
         <el-card direction="vertical" id="box-card" shadow="hover">
           <template #header>
             <div @click="getDetail(course.id)" class="box-card-header">
-              <img style="width: 100%; height: 200px; border: none" :src="course.logo" />
+              <img style="width: 100%; height: 200px; border: none; object-fit: cover;" :src="course.logo" />
             </div>
             <div class="card-header" @click="getDetail(course.id)">
               <span>
-                <h3>{{ course.name }}</h3>
+                <h3 class="truncate hover-show-full" :title="course.name">{{ course.name }}</h3>
               </span>
             </div>
           </template>
-          <div class="text-item">
+          <div class="text-item truncate hover-show-full" :title="course.title">
             {{ course.title }}
           </div>
           <div>
@@ -89,7 +89,7 @@
 
     <el-row>
       <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[3, 6, 9, 12]"
-        :page-size="pagesize" :total="courses.length" @current-change="handleCurrentChange"
+        :page-size="pagesize" :total="filteredCourses.length" @current-change="handleCurrentChange"
         @size-change="handleSizeChange">
       </el-pagination>
     </el-row>
@@ -105,24 +105,27 @@
 #box-card {
   width: 100%;
   margin-bottom: 30px;
+  height: 500px; /* 增加卡片高度 */
 }
 
 .card-header {
   font-family: "Microsoft YaHei";
-  font-weight: 400;
-  padding: 10px;
-  
+  font-weight: 300;
+  padding: 5px 10px; /* 增加标题部分的高度 */
 }
 
 .text-item {
   font-family: "Microsoft YaHei";
   font-size: 14px;
   font-weight: 400;
-  padding: 10px;
+  padding: 5px 10px; /* 缩小间距 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .input-item {
-  width: 100%;
+  width: 80%;
   margin-right: 10px;
 }
 
@@ -187,6 +190,25 @@
 
 .card-header h3 {
   font-size: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.el-col {
+  margin-bottom: 50px; /* 确保每列之间有足够的间距 */
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hover-show-full:hover {
+  overflow: visible !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
 }
 </style>
 
@@ -213,6 +235,17 @@ export default {
       sortOrder: 'desc', // 默认排序方式为降序
     };
   },
+  computed: {
+    filteredCourses() {
+      return this.courses.filter(course => course.status === 1);
+    },
+    filteredCarouselCourses() {
+      return this.carouselCourses.filter(course => course.status === 1);
+    },
+    filteredLatestCourses() {
+      return this.latestCourses.filter(course => course.status === 1);
+    },
+  },
   created() {
     this.fetchData();
   },
@@ -222,6 +255,7 @@ export default {
         this.courses = response.data.items;
         this.carouselCourses = response.data.items.slice(0, 5); // 取前5个课程
         this.latestCourses = this.courses
+          .filter(course => course.status === 1)
           .sort((a, b) => new Date(b.gmtCreate) - new Date(a.gmtCreate))
           .slice(0, 3); // 取前 3 个最新课程
       });
@@ -237,31 +271,31 @@ export default {
     },
     searchCourse(input) {
       search(input).then((res) => {
-        this.courses = res.data.items;
+        this.courses = res.data.items.filter(course => course.status === 1);
         this.applySorting(); // 应用排序
       });
     },
     searchCourse2() {
       getContain(1).then((res) => {
-        this.courses = res.data.courses;
+        this.courses = res.data.courses.filter(course => course.status === 1);
         this.applySorting(); // 应用排序
       });
     },
     searchCourse3() {
       getContain(2).then((res) => {
-        this.courses = res.data.courses;
+        this.courses = res.data.courses.filter(course => course.status === 1);
         this.applySorting(); // 应用排序
       });
     },
     searchCourse4() {
       getContain(3).then((res) => {
-        this.courses = res.data.courses;
+        this.courses = res.data.courses.filter(course => course.status === 1);
         this.applySorting(); // 应用排序
       });
     },
     searchCourse5() {
       getContain(4).then((res) => {
-        this.courses = res.data.courses;
+        this.courses = res.data.courses.filter(course => course.status === 1);
         this.applySorting(); // 应用排序
       });
     },
