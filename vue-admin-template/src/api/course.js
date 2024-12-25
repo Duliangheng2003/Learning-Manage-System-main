@@ -214,6 +214,23 @@ export function getAssignmentsById(id) {
     params:{id}
   })
 }
+// 根据作业id获取作业信息
+export function getAssignment(id) {
+  return request({
+    url: '/course/assignment',
+    method: 'get',
+    params:{id}
+  })
+}
+
+// 提交用户作业
+export function submitAssignment(submitForm) {
+  return request({
+    url: '/course/submit',
+    method: 'post',
+    data: submitForm
+  })
+}
 
 // 根据课程id列出课件
 export function listCourseware(id){

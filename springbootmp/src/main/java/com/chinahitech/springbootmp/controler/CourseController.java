@@ -421,6 +421,27 @@ public class CourseController {
         return R.ok().data("assignments", eduSubmissions1);
     }
 
+    // 根据作业id查找对应作业情况
+    @GetMapping("assignment")
+    public R getAssignment(@RequestParam int id) {
+        EduSubmission eduSubmission = submissionMapper.selectById(id);
+        EduAssignment eduAssignment = assignmentMapper.selectById(eduSubmission.getAssId());
+        return R.ok().data("assignment", eduAssignment);
+    }
+
+    // 提交用户作业
+    @PostMapping("submit")
+    public R submitAssignment(@RequestBody EduSubmission eduSubmission) {
+        eduSubmission.setStatus(1);
+        int i = submissionMapper.updateById(eduSubmission);
+        if(i > 0){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+
+
     // 根据课程id列出可添加的课程
     @PostMapping("courseware")
     public R listRestCourseware(@RequestParam int id)

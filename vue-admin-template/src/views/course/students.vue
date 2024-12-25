@@ -65,6 +65,17 @@
             </span>
           </template>
         </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="120">
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.status === 1"
+              size="mini"
+              @click="viewAssignmentDetail(scope.row.id)">查看详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">关闭</el-button>
@@ -126,6 +137,10 @@ export default {
     // 根据 status 返回对应的样式类
     getStatusClass(status) {
       return status === 1 ? 'submitted' : 'not-submitted';
+    },
+    // 查看作业详情
+    viewAssignmentDetail(assignmentId) {
+      this.$router.push({ path: `/course/submit/${assignmentId}`, query: { studentId: this.currentStudentId } });
     }
   }
 }

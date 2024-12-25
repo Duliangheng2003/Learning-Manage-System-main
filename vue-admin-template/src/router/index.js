@@ -356,6 +356,13 @@ export const constantRoutes = [
         hidden:true
       },
       {
+        path: 'submit/:id',
+        name: '提交详情',
+        component: () => import('@/views/course/submit'),
+        meta: { title: '提交详情', icon: 'tree' },
+        hidden:true
+      },
+      {
         path: 'collections/:id',
         name: '查看收藏学生',
         component: () => import('@/views/course/collections'),
