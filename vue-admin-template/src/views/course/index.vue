@@ -2,7 +2,7 @@
   <div id="course-list">
     <el-form ref="form" label-width="300px" @keyup.enter.native="searchCourse(input)">
       <!-- 轮播图 -->
-      <el-carousel height="400px" :autoplay="true" indicator-position="outside">
+      <el-carousel height="400px" :autoplay="true" indicator-position="outside" type="card">
         <el-carousel-item v-for="(item, index) in carouselCourses" :key="index" @click="getDetail(item.id)">
           <div class="carousel-item">
             <img :src="item.logo" alt="课程图片" class="carousel-image" />

@@ -62,12 +62,16 @@ public class AdminController {
             Stu stu = stuMapper.selectById(token);
             if (stu.getType() == 0) {
                 data.put("roles", new String[]{"student"});
+                data.put("name",stu.getSname());
+                data.put("introduction","欢迎来到学生端主页，你可以在左侧导航栏中浏览相关信息");
+                data.put("avatar",stu.getAvatar());
             } else {
                 data.put("roles", new String[]{"teacher"});
+                data.put("name",stu.getSname());
+                data.put("introduction","欢迎来到教师端主页，你可以在左侧导航栏中浏览相关信息");
+                data.put("avatar",stu.getAvatar());
             }
-            data.put("name",stu.getSname());
-            data.put("introduction","≥Ö‿Ö≤欢迎来到主页，你可以在左侧导航栏中浏览相关信息");
-            data.put("avatar",stu.getAvatar());
+
         }
        else
         {

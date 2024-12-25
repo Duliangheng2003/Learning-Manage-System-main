@@ -28,26 +28,23 @@
           </el-popover>
         </template>
       </el-table-column>
- 
-      <el-table-column label="生日" width="180">
+      <el-table-column label="生日" width="120">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{
-            scope.row.birthday | moment
+            scope.row.birthday | moment("MM-DD")
           }}</span>
         </template>
       </el-table-column>
       <el-table-column label="年龄" width="80">
         <template slot-scope="scope">
-         <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{
             scope.row.age
           }}</span>
         </template>
       </el-table-column>
-       <el-table-column label="密码" width="180">
+      <el-table-column label="密码" width="180">
         <template slot-scope="scope">
-         <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{
             scope.row.pwd
           }}</span>
@@ -140,7 +137,8 @@ export default {
           // 调用api中删除讲师的方法
           delStu(id).then((response) => {
             // 删除成功后，重新加载讲员工表
-            this.$router.push("/emp/list/");
+            this.$router.push("/stu/list/");
+            this.fetchData();
             this.$message({
               type: "success",
               message: "删除成功!",
@@ -157,3 +155,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.app-container {
+  max-width: 1200px;
+  margin: 20px auto;
+}
+</style>
+
+
+

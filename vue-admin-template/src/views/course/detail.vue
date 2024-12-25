@@ -50,37 +50,12 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="comments-section">
-      <h2>课程评论</h2>
-
-      <!-- 评论列表 -->
-      <el-list>
-        <el-card v-for="comment in comments" :key="comment.id" class="comment-card">
-          <div class="comment-header">
-            <strong>{{ comment.userName }}</strong>
-            <span>{{ comment.createdAt }}</span>
-          </div>
-          <div class="comment-content">
-            <p>{{ comment.content }}</p>
-          </div>
-        </el-card>
-      </el-list>
-
-      <!-- 评论输入框 -->
-      <el-input
-        type="textarea"
-        v-model="newComment"
-        placeholder="请输入您的评论"
-        rows="4"
-        style="margin-top: 20px"
-      ></el-input>
-      <el-button
-        type="primary"
-        @click="submitComment"
-        style="margin-top: 10px"
-        :loading="loadingComment"
-      >提交评论</el-button>
-    </div>
+    <el-button
+      type="primary"
+      @click="goToQuestionPage"
+      style="margin-top: 30px">
+      讨论区
+    </el-button>
   </div>
 </template>
 
@@ -103,26 +78,7 @@
   margin: 0 auto;
   margin-block: 30px;
 }
-.comments-section {
-  margin-top: 30px;
-}
 
-.comment-card {
-  margin-bottom: 15px;
-}
-
-.comment-header {
-  font-size: 14px;
-  color: #666;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
-}
-
-.comment-content {
-  font-size: 16px;
-  color: #333;
-}
 
 </style>
 
@@ -180,32 +136,9 @@ export default {
         this.fetchQ(this.$route.params.id);
       });
     },
-    submitComment() {
-      if (!this.newComment.trim()) {
-        this.$message.error("评论内容不能为空!");
-        return;
-      }
-
-      this.loadingComment = true; // 开始加载状态
-      const commentData = {
-        courseId: this.$route.params.id,
-        content: this.newComment,
-      };
-
-      postComment(commentData).then((response) => {
-        this.loadingComment = false; // 停止加载状态
-        if (response.data.success) {
-          this.$message.success("评论提交成功!");
-          this.newComment = ""; // 清空输入框
-          this.fetchComments(this.$route.params.id); // 刷新评论区
-        } else {
-          this.$message.error("评论提交失败，请稍后再试！");
-        }
-      }).catch(() => {
-        this.loadingComment = false; // 停止加载状态
-        this.$message.error("评论提交失败，请稍后再试！");
-      });
-    }
+    goToQuestionPage() {
+      this.$router.push("/question/index");
+    },
   },
 };
 </script>

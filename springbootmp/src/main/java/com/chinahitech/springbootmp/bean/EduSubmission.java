@@ -18,4 +18,7 @@ public class EduSubmission {
 
     // 作业状态
     int status;
+
+    // 学生提交
+    String commit;
 }
