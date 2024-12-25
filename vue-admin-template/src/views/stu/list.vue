@@ -152,22 +152,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.app-container {
-  max-width: 1200px;
-  margin: 20px auto;
-}
-
-/* 增加列间距 */
-.el-table th.is-leaf, .el-table td {
-  padding: 12px 20px;
-}
-
-/* 调整按钮间距 */
-.el-table .el-button + .el-button {
-  margin-left: 10px;
-}
-</style>
 
 
 
