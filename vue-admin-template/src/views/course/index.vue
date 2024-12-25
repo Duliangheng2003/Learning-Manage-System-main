@@ -2,7 +2,7 @@
   <div id="course-list">
     <el-form ref="form" label-width="300px" @keyup.enter.native="searchCourse(input)">
       <!-- 轮播图 -->
-      <el-carousel height="400px" :autoplay="true" indicator-position="outside">
+      <el-carousel height="400px" :autoplay="true" indicator-position="outside" type="card">
         <el-carousel-item v-for="(item, index) in carouselCourses" :key="index" @click="getDetail(item.id)">
           <div class="carousel-item">
             <img :src="item.logo" alt="课程图片" class="carousel-image" />
@@ -38,9 +38,9 @@
       <!-- 排序方式按钮 -->
       <div class="sort-buttons">
         <el-button @click="setSortBy('gmt_create')" :type="sortBy === 'gmt_create' ? 'primary' : ''">按发布时间</el-button>
-        <el-button @click="setSortBy('registration_count')"
-          :type="sortBy === 'registration_count' ? 'primary' : ''">按注册人数</el-button>
-        <el-button @click="setSortBy('updated_at')" :type="sortBy === 'updated_at' ? 'primary' : ''">按更新时间</el-button>
+        <el-button @click="setSortBy('through')"
+          :type="sortBy === 'through' ? 'primary' : ''">按注册人数</el-button>
+        <el-button @click="setSortBy('gmt_modified')" :type="sortBy === 'gmt_modified' ? 'primary' : ''">按更新时间</el-button>
         <el-button @click="setSortBy('zan')" :type="sortBy === 'zan' ? 'primary' : ''">按点赞人数</el-button>
       </div>
 
@@ -211,10 +211,12 @@ export default {
       getAll().then((response) => {
         this.courses = response.data.items;
         this.carouselCourses = response.data.items.slice(0, 5); // 取前5个课程
-        this.sortByZanCourses = this.courses
-         .sort((a, b) => b.zan - a.zan);
+        this.zan = response.data.items.zan;
+        this.gmt_create = response.data.items.gmt_create;
+        this.through = response.data.items.through;
+        this.gmt_modified = response.data.items.gmt_modified;
         this.latestCourses = this.courses
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .sort((a, b) => new Date(b.gmt_create) - new Date(a.gmt_create))
           .slice(0, 3); // 取前 3 个最新课程
       });
 
@@ -273,17 +275,33 @@ export default {
         this.$router.push({ path: "/course/index" });
       });
     },
-    // 设置排序方式（按什么字段排序）
-    setSortBy(sortBy) {
-      this.sortBy = sortBy;
-      this.sortCourses();
-    },
-    // 设置排序顺序（升序或降序）
-    setSortOrder(sortOrder) {
-      this.sortOrder = sortOrder;
-      this.sortCourses();
-    },
+  // 排序课程的方法
+  sortCourses() {
+    if (!this.sortBy) return; // 如果没有指定排序字段，则不执行排序
+    const sortKey = this.sortBy; // 获取当前排序字段
+    const order = this.sortOrder === "asc" ? 1 : -1; // 确定升序或降序
 
+    this.courses.sort((a, b) => {
+      if (sortKey === "gmt_create" || sortKey === "gmt_modified") {
+        // 如果是日期类型，先转换为日期对象再比较
+        return( new Date(a.sortKey) - new Date(b.sortKey) )* order;
+      }
+      // 如果是数值类型，直接比较
+      return (a[sortKey] - b[sortKey]) * order;
+    });
+  },
+
+  // 设置排序字段并重新排序
+  setSortBy(sortBy) {
+    this.sortBy = sortBy;
+    this.sortCourses(); // 调用排序方法
+  },
+
+  // 设置排序顺序并重新排序
+  setSortOrder(sortOrder) {
+    this.sortOrder = sortOrder;
+    this.sortCourses(); // 调用排序方法
+  },
   },
 
 };
