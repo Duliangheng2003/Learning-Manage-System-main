@@ -81,7 +81,7 @@ export default {
           message: '添加成功!'
         });
         // 跳转到列表页
-        this.$router.push({ path: "/course/list" })
+        this.$router.push({ path: "/admin/courselist" })
       })
     },
     updateInfo(course) {
@@ -91,7 +91,7 @@ export default {
           message: '修改成功!'
         });
         // 跳转到列表页
-        this.$router.push({ path: "/course/list" })
+        this.$router.push({ path: "/admin/courselist" })
       })
     },
     handleAvatarSuccess(res) {

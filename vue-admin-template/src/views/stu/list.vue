@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-table
       :data="
-        tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)
+        filteredTableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)
       "
       style="width: 100%"
     >
@@ -11,7 +11,7 @@
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-       <el-table-column label="学生学号" width="180">
+      <el-table-column label="学生学号" width="180">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.sid }}</span>
         </template>
@@ -32,25 +32,18 @@
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{
-            scope.row.birthday | moment("MM-DD")
+            scope.row.birthday | formatDate
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="年龄" width="80">
+      <el-table-column label="年龄" width="120">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{
             scope.row.age
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="密码" width="180">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{
-            scope.row.pwd
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="联系方式" width="180">
+      <el-table-column label="联系方式" width="220">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>邮箱: {{ scope.row.email }}</p>
@@ -80,7 +73,7 @@
       layout="prev, pager, next, sizes, total, jumper"
       :page-sizes="[5, 10, 15, 20]"
       :page-size="pagesize"
-      :total="tableData.length"
+      :total="filteredTableData.length"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     >
@@ -90,16 +83,15 @@
 
 <script>
 import { delStu, getStu } from "@/api/stu";
+
 export default {
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${month}-${day}`;
+    }
   },
   data() {
     return {
@@ -107,6 +99,11 @@ export default {
       currentPage: 1,
       tableData: [],
     };
+  },
+  computed: {
+    filteredTableData() {
+      return this.tableData.filter(row => row.type !== 1);
+    }
   },
   created() {
     this.fetchData();
@@ -119,7 +116,7 @@ export default {
       this.pagesize = psize;
     },
     handleEdit(id) {
-      // 路由跳转  /emp/save/xxxxxxx"
+      // 路由跳转  /stu/save/xxxxxxx"
       this.$router.push("/stu/save/" + id);
     },
     fetchData() {
@@ -137,7 +134,6 @@ export default {
           // 调用api中删除讲师的方法
           delStu(id).then((response) => {
             // 删除成功后，重新加载讲员工表
-            this.$router.push("/stu/list/");
             this.fetchData();
             this.$message({
               type: "success",
@@ -160,6 +156,16 @@ export default {
 .app-container {
   max-width: 1200px;
   margin: 20px auto;
+}
+
+/* 增加列间距 */
+.el-table th.is-leaf, .el-table td {
+  padding: 12px 20px;
+}
+
+/* 调整按钮间距 */
+.el-table .el-button + .el-button {
+  margin-left: 10px;
 }
 </style>
 

@@ -12,23 +12,23 @@
       style="width: 100%">
       <el-table-column
         label="序号"
-        width="180">
+        min-width="100">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column
         label="标题"
-        width="200" prop="name">
+        min-width="200" prop="name">
       </el-table-column>
       <el-table-column
         label="状态"
-        width="150">
+        min-width="150">
         <template slot-scope="scope">
           {{ getStatusText(scope.row.status) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -155,7 +155,6 @@ export default {
 /* 添加一些样式以美化表格和对话框 */
 .app-container {
   width: 90%;
-  margin: 0 auto;
 }
 
 .assignment-details {
@@ -183,6 +182,16 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* 增加列间距 */
+.el-table th.is-leaf, .el-table td {
+  padding: 12px 20px;
+}
+
+/* 调整按钮间距 */
+.el-table .el-button + .el-button {
+  margin-left: 10px;
 }
 </style>
 

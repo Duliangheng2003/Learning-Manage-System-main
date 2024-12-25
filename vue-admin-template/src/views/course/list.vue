@@ -22,7 +22,7 @@
       <el-table-column label="结束时间" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.endTime | moment }}</span>
+          <span style="margin-left: 10px">{{ scope.row.endTime | formatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -96,7 +96,7 @@
       <div class="preview-card">
         <h4>{{ selectedCourse.name }}</h4>
         <p><strong>类型:</strong> {{ selectedCourse.title }}</p>
-        <p><strong>结束时间:</strong> {{ selectedCourse.endTime | moment }}</p>
+        <p><strong>结束时间:</strong> {{ selectedCourse.endTime | formatDate }}</p>
         <p><strong>状态:</strong> <span :class="getStatusClass(1)">{{ getStatusText(1) }}</span></p>
         <p><strong>评论区:</strong> {{ publishForm.enableComments ? '开启' : '关闭' }}</p>
         <p><strong>笔记区:</strong> {{ publishForm.enableNotes ? '开启' : '关闭' }}</p>
@@ -111,13 +111,12 @@
 
 <script>
 import { getAll, deleteByID, updateCourseStatus } from '@/api/course'
-import { status } from 'nprogress';
+import moment from 'moment';
 
 export default {
   filters: {
-    moment(date) {
-      // 假设这里有一个 moment.js 的过滤器来格式化日期
-      return date; // 这里可以根据需要替换为实际的日期格式化逻辑
+    formatDate(date) {
+      return moment(date).format('YYYY-MM-DD');
     }
   },
   data() {

@@ -28,24 +28,27 @@
         </el-row>
       </div>
 
-      <el-input class="input-item" placeholder="请输入内容" v-model="input" style="width: 800px" clearable>
+      <el-input class="input-item" placeholder="请输入内容" v-model="input" clearable>
+        <template #prefix>
+          <i class="el-input__icon el-icon-search"></i>
+        </template>
       </el-input>
       <el-button size="small" class="input-button" @click="searchCourse(input)">查询</el-button>
 
-      <!-- 排序方式按钮 -->
-      <div class="sort-buttons">
-        <el-button @click="setSortBy('gmt_create')" :type="sortBy === 'gmt_create' ? 'primary' : ''">按发布时间</el-button>
-        <el-button @click="setSortBy('registration_count')"
-          :type="sortBy === 'registration_count' ? 'primary' : ''">按注册人数</el-button>
-        <el-button @click="setSortBy('updated_at')" :type="sortBy === 'updated_at' ? 'primary' : ''">按更新时间</el-button>
-        <el-button @click="setSortBy('zan')" :type="sortBy === 'zan' ? 'primary' : ''">按点赞人数</el-button>
+      <!-- 排序方式下拉菜单 -->
+      <div class="sort-dropdowns">
+        <el-select v-model="sortBy" placeholder="选择排序字段" @change="applySorting">
+          <el-option label="按发布时间" value="gmtCreate"></el-option>
+          <el-option label="按注册人数" value="through"></el-option>
+          <el-option label="按更新时间" value="gmtModified"></el-option>
+          <el-option label="按点赞人数" value="zan"></el-option>
+        </el-select>
+        <el-select v-model="sortOrder" placeholder="选择排序顺序" @change="applySorting">
+          <el-option label="升序" value="asc"></el-option>
+          <el-option label="降序" value="desc"></el-option>
+        </el-select>
       </div>
 
-      <!-- 升降序按钮 -->
-      <div class="sort-order-buttons">
-        <el-button @click="setSortOrder('asc')" :type="sortOrder === 'asc' ? 'primary' : ''">升序</el-button>
-        <el-button @click="setSortOrder('desc')" :type="sortOrder === 'desc' ? 'primary' : ''">降序</el-button>
-      </div>
       <div>
         <el-button size="small" class="input-button" @click="fetchData()">全部</el-button>
         <el-button size="small" class="input-button" @click="searchCourse2()">计算机编程</el-button>
@@ -63,11 +66,11 @@
         <el-card direction="vertical" id="box-card" shadow="hover">
           <template #header>
             <div @click="getDetail(course.id)" class="box-card-header">
-              <img style="width: 200px; height: 200px; border: none" :src="course.logo" />
+              <img style="width: 100%; height: 200px; border: none" :src="course.logo" />
             </div>
             <div class="card-header" @click="getDetail(course.id)">
               <span>
-                <h1>{{ course.name }}</h1>
+                <h3>{{ course.name }}</h3>
               </span>
             </div>
           </template>
@@ -100,26 +103,27 @@
 }
 
 #box-card {
-  width: 400px;
-  margin-block: 30px;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 .card-header {
   font-family: "Microsoft YaHei";
-  font-weight: 1200;
+  font-weight: 400;
   padding: 10px;
+  
 }
 
 .text-item {
   font-family: "Microsoft YaHei";
-  font-size: 120%;
+  font-size: 14px;
   font-weight: 400;
-  padding: 30px;
+  padding: 10px;
 }
 
 .input-item {
-  padding: 30px;
-  width: 300px;
+  width: 100%;
+  margin-right: 10px;
 }
 
 .carousel-item {
@@ -157,7 +161,7 @@
 
 .course-logo {
   width: 100%;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
   border-radius: 5px;
 }
@@ -166,14 +170,23 @@
   margin-top: 10px;
 }
 
-.sort-buttons,
-.sort-order-buttons {
+.sort-dropdowns {
   margin-bottom: 20px;
 }
 
-.sort-buttons el-button,
-.sort-order-buttons el-button {
+.sort-dropdowns .el-select {
   margin-right: 10px;
+}
+
+.box-card-header img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.card-header h3 {
+  font-size: 24px;
 }
 </style>
 
@@ -193,11 +206,10 @@ export default {
       courses: [],
       carouselCourses: [],  // 轮播图数据
       latestCourses: [], // 最新课程数据
-      pagesize: 3,
+      pagesize: 6,
       currentPage: 1,
       input: "",
-      sortedCourses: [], // 存储排序后的课程
-      sortBy: '', // 默认排序方式为按发布时间
+      sortBy: '', // 默认排序方式为空
       sortOrder: 'desc', // 默认排序方式为降序
     };
   },
@@ -210,7 +222,7 @@ export default {
         this.courses = response.data.items;
         this.carouselCourses = response.data.items.slice(0, 5); // 取前5个课程
         this.latestCourses = this.courses
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .sort((a, b) => new Date(b.gmtCreate) - new Date(a.gmtCreate))
           .slice(0, 3); // 取前 3 个最新课程
       });
     },
@@ -226,26 +238,31 @@ export default {
     searchCourse(input) {
       search(input).then((res) => {
         this.courses = res.data.items;
+        this.applySorting(); // 应用排序
       });
     },
     searchCourse2() {
       getContain(1).then((res) => {
         this.courses = res.data.courses;
+        this.applySorting(); // 应用排序
       });
     },
     searchCourse3() {
       getContain(2).then((res) => {
         this.courses = res.data.courses;
+        this.applySorting(); // 应用排序
       });
     },
     searchCourse4() {
       getContain(3).then((res) => {
         this.courses = res.data.courses;
+        this.applySorting(); // 应用排序
       });
     },
     searchCourse5() {
       getContain(4).then((res) => {
         this.courses = res.data.courses;
+        this.applySorting(); // 应用排序
       });
     },
     handleEdit(id) {
@@ -268,25 +285,18 @@ export default {
         this.$router.push({ path: "/course/index" });
       });
     },
-    // 设置排序方式（按什么字段排序）
-    setSortBy(sortBy) {
-      this.sortBy = sortBy;
-      this.sortCourses();
-    },
-    // 设置排序顺序（升序或降序）
-    setSortOrder(sortOrder) {
-      this.sortOrder = sortOrder;
-      this.sortCourses();
-    },
-    sortCourses() {
-      if (!this.sortBy) return;
+    applySorting() {
+      if (!this.sortBy) return; // 如果没有指定排序字段，则不执行排序
+      const sortKey = this.sortBy; // 获取当前排序字段
+      const order = this.sortOrder === "asc" ? 1 : -1; // 确定升序或降序
 
-      const orderMultiplier = this.sortOrder === 'asc' ? 1 : -1;
       this.courses.sort((a, b) => {
-        if (typeof a[this.sortBy] === 'string' && typeof b[this.sortBy] === 'string') {
-          return a[this.sortBy].localeCompare(b[this.sortBy]) * orderMultiplier;
+        if (sortKey === "gmtCreate" || sortKey === "gmtModified") {
+          // 如果是日期类型，先转换为日期对象再比较
+          return (new Date(a[sortKey]) - new Date(b[sortKey])) * order;
         }
-        return (a[this.sortBy] - b[this.sortBy]) * orderMultiplier;
+        // 如果是数值类型，直接比较
+        return (a[sortKey] - b[sortKey]) * order;
       });
     },
   },

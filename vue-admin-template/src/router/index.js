@@ -180,7 +180,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/question/index',
     name: '问答',
-    meta: { title: '讨论区', icon: 'el-icon-s-help' },
+    meta: { title: '讨论区', icon: 'el-icon-s-help' , roles: ['student']},
     children: [
       {
         path: 'index',

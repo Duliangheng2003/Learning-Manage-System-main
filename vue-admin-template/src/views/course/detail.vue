@@ -1,139 +1,136 @@
 <template>
   <div id="all">
-    <el-button @click="handleClick" style="margin-block: 0px" type="primary"
+    <el-button @click="handleClick" style="margin-bottom: 20px" type="primary"
       >返回</el-button
     >
-    <div class="title" @click="getLink()">
+    <div class="course-header" @click="getLink">
       <img
-        style="width: 200px; height: 200px; border: none"
+        style="width: 300px; height: 200px; border-radius: 10px"
         :src="course.logo"
       />
-    </div>
-    <div course @click="getLink()">
-      <el-card shadow="hover" class="course" type="primary">
+      <div class="course-info">
         <h1>{{ course.name }}</h1>
-        <p>{{ course.title }}</p>
         <el-space wrap size="large">
           <el-button
             size="small"
             @click="likeCourse(course.id)"
-            style="margin-block: 10px"
+            style="margin-top: 10px"
             icon="el-icon-thumb"
-            >{{ course.zan }}</el-button
+            >{{ course.zan }} 点赞</el-button
           >
-          <i
-            id="browse"
-            style="padding: 30px"
-            class="el-icon-view"
-            size="large"
-            >{{ course.through }}</i
-          >
+          <span class="view-count">
+            <i class="el-icon-view"></i> {{ course.through }} 浏览
+          </span>
         </el-space>
-      </el-card>
+      </div>
     </div>
-
-    <div comment>
-      <h1>任课教师</h1>
-      <el-table :data="teachers" style="width: 100%">
-        <el-table-column label="名字" width="180" prop="name">
-        </el-table-column>
-        <el-table-column label="职称" width="180" prop="career">
-        </el-table-column>
-        <el-table-column label="照片" width="180">
-          <template slot-scope="scope" >
-            <img
-            @click="getDetail(scope.row.id)"
-              style="width: 100px; height: 100px; border: none"
-              :src="scope.row.avatar"
-            />
-          </template>
-        </el-table-column>
-      </el-table>
+    <div class="course-description">
+      <h2>课程简介</h2>
+      <p>{{ course.title }}</p>
     </div>
     <el-button
       type="primary"
       @click="goToQuestionPage"
-      style="margin-top: 30px">
+      style="margin-top: 30px; margin-bottom: 30px"
+    >
       讨论区
     </el-button>
   </div>
 </template>
 
 <style scoped>
-.course {
-  padding: 10px;
-  max-width: 960px;
-  margin: 0 auto;
-  margin-block: 30px;
-}
-.comment {
-  padding: 10px;
-  max-width: 900px;
-  margin: 0 auto;
-  margin-block: 30px;
-}
 #all {
-  padding: 10px;
+  padding: 20px;
   max-width: 960px;
   margin: 0 auto;
-  margin-block: 30px;
 }
 
+.course-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
 
+.course-header img {
+  width: 300px;
+  height: 200px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.course-info {
+  flex-grow: 1;
+}
+
+.course-info h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.course-info p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.view-count {
+  font-size: 14px;
+  color: #777;
+}
+
+.course-description {
+  margin-bottom: 30px;
+}
+
+.course-description h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.course-description p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.el-button {
+  margin-right: 10px;
+}
 </style>
 
 <script>
-import { get, likeCourse, watchCourse, getTeachers } from "@/api/course";
+import { get, likeCourse, watchCourse } from "@/api/course";
+
 export default {
   data() {
     return {
-      course: "",
-      teachers: [],
-      comments: [],  // 评论列表
-      newComment: "",  // 新评论的内容
-      loadingComment: false,  // 提交评论时的加载状态
+      course: {},
     };
   },
   created() {
-    this.watchCourse(this.$route.params.id),
-      this.getTeachers(this.$route.params.id);
-      this.fetchcomments(this.$route.params.id);
+    this.fetchData(this.$route.params.id);
   },
   methods: {
-     getLink(){
-                window.location.href = this.course.link
-
-        },
-    getDetail(id) {
-      this.$router.push("/teacher/detail/" + id);
-    },
-    fetchQ(id) {
-      get(id).then((res) => {
-        this.course = res.data.course;
-        console.log(this.course);
-      });
-    },
-    getTeachers(id) {
-      getTeachers(id).then((response) => {
-        this.teachers = response.data.teachers;
-      });
-    },
-    fetchcomments(id) {
-      get(id).then((res) => {
-        this.comments = res.data.course.comments;
-      });
+    getLink() {
+      if (this.course.link) {
+        window.location.href = this.course.link;
+      }
     },
     handleClick() {
       this.$router.go(-1);
     },
-    likeCourse(qid) {
-      likeCourse(qid).then((res) => {
-        this.fetchQ(this.$route.params.id);
+    fetchData(id) {
+      get(id).then((res) => {
+        this.course = res.data.course;
+        console.log(this.course);
       });
+      likeCourse(id); // 假设这是用于初始化点赞数
+      watchCourse(id); // 假设这是用于初始化浏览数
     },
-    watchCourse(id) {
-      watchCourse(this.$route.params.id).then((res) => {
-        this.fetchQ(this.$route.params.id);
+    likeCourse(qid) {
+      likeCourse(qid).then(() => {
+        this.fetchData(this.$route.params.id);
       });
     },
     goToQuestionPage() {
@@ -142,3 +139,6 @@ export default {
   },
 };
 </script>
+
+
+
