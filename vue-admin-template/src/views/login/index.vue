@@ -1,76 +1,94 @@
 <template>
   <div class="login-container">
-    <el-row>
+    <div class="form-container">
+      <el-row>
+        <el-button @click="addLogin" type="primary" icon="el-icon-edit" circle class="edit-btn"></el-button>
+      </el-row>
+      <el-row>
+        <el-form
+          ref="loginForm"
+          :model="loginForm"
+          :rules="loginRules"
+          class="login-form"
+          auto-complete="on"
+          label-position="left"
+        >
+          <div class="title-container">
+            <h3 class="title">Welcome Back</h3>
+          </div>
 
-      <el-button @click="addLogin" type="primary" icon="el-icon-edit" circle></el-button>
+          <el-form-item prop="username">
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="Username"
+              name="username"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+            />
+          </el-form-item>
 
-    </el-row>
-    <el-row>
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
-        label-position="left">
-        <div class="title-container">
-          <h3 class="title">Login Form</h3>
-        </div>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              auto-complete="on"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
 
-        <el-form-item prop="accountType">
-          <el-select v-model="loginForm.accountType" placeholder="选择账户类型">
-            <el-option label="学生" value="1"></el-option>
-            <el-option label="教师" value="2"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item>
+            <el-checkbox v-model="loginForm.rememberAccount">Remember Account</el-checkbox>
+            <el-checkbox v-model="loginForm.rememberPassword">Remember Password</el-checkbox>
+          </el-form-item>
 
-        <el-form-item prop="username">
-          <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span>
-          <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text"
-            tabindex="1" auto-complete="on" />
-        </el-form-item>
+          <el-form-item prop="agreePrivacy">
+            <el-checkbox v-model="loginForm.agreePrivacy">
+              I agree to the
+              <a href="https://www.julyedu.com/agreement/priv" class="privacy-link">Privacy Policy</a>
+            </el-checkbox>
+          </el-form-item>
 
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
-            placeholder="Password" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin" />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-form-item>
-        <!-- 记住账号 -->
-        <el-form-item>
-          <el-checkbox v-model="loginForm.rememberAccount">记住账号</el-checkbox>
-        </el-form-item>
+          <el-button
+            :loading="loading"
+            type="primary"
+            class="login-button"
+            @click.native.prevent="handleLogin"
+          >
+            Login
+          </el-button>
 
-        <!-- 记住密码 -->
-        <el-form-item>
-          <el-checkbox v-model="loginForm.rememberPassword">记住密码</el-checkbox>
-        </el-form-item>
-
-        <!-- 同意隐私协议 -->
-        <el-form-item prop="agreePrivacy">
-          <el-checkbox v-model="loginForm.agreePrivacy">我同意<a href="https://www.julyedu.com/agreement/priv" class="privacy-link">隐私协议</a></el-checkbox>
-        </el-form-item>
-
-        <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
-          @click.native.prevent="handleLogin"> <a href="" class="bullshit__return-home">login</a></el-button>
-
-
-
-        <div class="tips">
-          <span style="margin-right: 20px">username: admin</span>
-          <span> password: 123456</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right: 20px">username: 学生id</span>
-          <span> password: 数据库中查询</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right: 20px"> </span>
-          <span> 左上角进行会员注册</span>
-        </div>
-      </el-form>
-    </el-row>
+          <el-button
+            type="text"
+            class="register-button"
+            @click.native.prevent="redirectToRegister"
+          >
+            Don't have an account? Register now
+          </el-button>
+          <el-button
+            type="text"
+            class="guest-button"
+            @click="handleGuestAccess"
+          >Visit as GUEST
+        </el-button>
+        </el-form>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -149,11 +167,17 @@ export default {
       get(id).then((response) => {
         console.log(id);
         if (response.data.stu == null) {
-          this.stu.pwd = 123456;
+          this.stu.pwd =123456;
         } else {
           this.stu = response.data.stu;
         }
       });
+    },
+    handleGuestAccess() {
+    this.$router.push("/course/index");
+    },
+    redirectToRegister() {
+      this.$router.push("/stu/reg/");
     },
     showPwd() {
       if (this.passwordType === "password") {
@@ -220,136 +244,142 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
+/* 背景渐变与居中布局 */
 .login-container {
-  min-height: 100%;
+  min-height: 100vh;
   width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-    .el-checkbox {
-      font-size: 14px;
-      color: #fff;
-    }
-
-    .el-button {
-      margin-top: 10px;
-    }
-
-    .remember-me {
-      margin-bottom: 10px;
-    }
-    .privacy-link {
-      color: #3498db; /* Change the text color */
-      text-decoration: none; /* Remove underline */
-      font-weight: bold; /* Make it bold */
-    }
-    .privacy-link:hover {
-      color: #fff;
-    }
-
+  background: linear-gradient(to bottom right, #4a90e2, #9013fe);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.form-container {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+}
+
+.title-container .title {
+  font-size: 28px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+/* 表单项样式 */
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.el-input {
+  width: 100%;
+  height: 45px;
+
+  input {
+    padding-left: 40px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 5px #4a90e2;
+    }
+  }
+}
+
+/* 图标容器 */
+.svg-container {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4a90e2;
+}
+
+.show-pwd {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+
+  &:hover {
+    color: #4a90e2;
+  }
+}
+
+/* 按钮样式 */
+.login-button {
+  width: 100%;
+  height: 45px;
+  border-radius: 25px;
+  background: linear-gradient(to right, #4a90e2, #9013fe);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: linear-gradient(to right, #9013fe, #4a90e2);
+  }
+}
+
+/* 隐私协议样式 */
+.privacy-link {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* 编辑按钮 */
+.edit-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #9013fe;
+  background-color: transparent;
+
+  &:hover {
+    color: #4a90e2;
+  }
+}
+.register-button {
+  margin-top: 15px;
+  display: block;
+  width: 100%;
+  color: #4a90e2;
+  font-size: 14px;
+  text-align: center;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #9013fe;
+  }
+}
+.guest-button {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  color: #4a90e2;
+  font-size: 14px;
+  text-align: center;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #9013fe;
+  }
+}
+
 </style>
