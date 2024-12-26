@@ -120,6 +120,9 @@ export default {
       else if ((value == "123456") && this.loginForm.username == "admin") {
         callback();
       }
+      else if ((value == "123456") && this.loginForm.username == "guest") {
+        callback();
+      }
       else if ((value != this.stu.pwd) && this.check) {
         callback(new Error("The password is false"));
         this.check = 0;
@@ -174,7 +177,9 @@ export default {
       });
     },
     handleGuestAccess() {
-    this.$router.push("/course/index");
+      this.loginForm.username = "guest";
+      this.loginForm.password = "123456";
+      this.handleLogin();
     },
     redirectToRegister() {
       this.$router.push("/stu/reg/");
