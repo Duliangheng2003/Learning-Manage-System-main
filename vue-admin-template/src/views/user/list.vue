@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <!-- 禁用学生注册按钮 -->
+    <el-button 
+      type="danger" 
+      @click="disableStudentRegistration"
+    >
+      禁用学生注册
+    </el-button>
+
     <el-table
       :data="
         tableData.filter(item => item.type !== 2).slice((currentPage - 1) * pagesize, currentPage * pagesize)
@@ -89,7 +97,8 @@
 </template>
 
 <script>
-import { delStu, getStu } from "@/api/stu";
+import { delStu, getStu, disableStudentRegistration as apiDisableStudentRegistration } from "@/api/stu";
+
 export default {
   filters: {
     statusFilter(status) {
@@ -154,6 +163,37 @@ export default {
           this.$message({
             type: "info",
             message: "已取消删除",
+          });
+        });
+    },
+    disableStudentRegistration() {
+      this.$confirm("此操作将禁用学生注册, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          apiDisableStudentRegistration().then(response => {
+            this.$alert('学生注册已被禁用', '禁用成功', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'success',
+                  message: '禁用学生注册成功!'
+                });
+              }
+            });
+          }).catch(error => {
+            this.$message({
+              type: "error",
+              message: "禁用学生注册失败!",
+            });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消禁用学生注册",
           });
         });
     },

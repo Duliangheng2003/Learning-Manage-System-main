@@ -22,7 +22,7 @@
         </div>
         <div v-else-if="assignment.type === 1">
           <p><strong>文件内容:</strong></p>
-          <a :href="assignment.commit" target="_blank">下载文件</a>
+          <a :href="assignment.commit" target="_blank"></a>
           <img v-if="isImage(assignment.commit)" :src="assignment.commit" alt="Submitted File" style="max-width: 100%; margin-top: 10px;" />
         </div>
       </el-card>
@@ -30,7 +30,7 @@
   </template>
   
   <script>
-  import { getAssignmentsById } from '@/api/course'
+  import { getStuSubmission } from '@/api/course'
   
   export default {
     data() {
@@ -45,7 +45,7 @@
     methods: {
       // 获取作业详情
       getAssignment(id) {
-        getAssignmentsById(id).then(response => {
+        getStuSubmission(id).then(response => {
           this.assignment = response.data.assignment;
         });
       },
