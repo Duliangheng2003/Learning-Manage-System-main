@@ -223,6 +223,14 @@ export function getAssignment(id) {
   })
 }
 
+export function getStuSubmission(id) {
+  return request({
+    url: '/course/getStuSubmission',
+    method: 'get',
+    params:{id}
+  })
+}
+
 // 提交用户作业
 export function submitAssignment(submitForm) {
   return request({

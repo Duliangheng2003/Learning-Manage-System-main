@@ -140,7 +140,7 @@ export default {
     },
     // 查看作业详情
     viewAssignmentDetail(assignmentId) {
-      this.$router.push({ path: `/course/submit/${assignmentId}`, query: { studentId: this.currentStudentId } });
+      this.$router.push({ path: `/course/submit/` + assignmentId});
     }
   }
 }

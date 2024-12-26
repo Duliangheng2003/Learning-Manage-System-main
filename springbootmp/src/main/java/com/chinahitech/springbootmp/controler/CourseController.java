@@ -421,6 +421,12 @@ public class CourseController {
         return R.ok().data("assignments", eduSubmissions1);
     }
 
+    @GetMapping("getStuSubmission")
+    public R getStuSubmission(@RequestParam int id) {
+        EduSubmission eduSubmission = submissionMapper.selectById(id);
+        return R.ok().data("assignment", eduSubmission);
+    }
+
     // 根据作业id查找对应作业情况
     @GetMapping("assignment")
     public R getAssignment(@RequestParam int id) {

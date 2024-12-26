@@ -72,4 +72,11 @@ export function delStu(id) {
     })
   }
 
+  export function disableStudentRegistration() {
+    return request({
+      url: '/stu/ban',
+      method: 'post'
+    })
+  }
+
 

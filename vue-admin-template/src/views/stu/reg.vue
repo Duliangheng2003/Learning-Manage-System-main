@@ -1,9 +1,6 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="stu" :rules="rules" label-width="80px">
-      <el-form-item label="id" prop="id">
-        <el-input v-model="stu.id"></el-input>
-      </el-form-item>
       <el-form-item label="姓名" prop="sname">
         <el-input v-model="stu.sname"></el-input>
       </el-form-item>
@@ -70,7 +67,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" :disabled="disable" @click="onSubmit">保存</el-button>
+        <el-button type="primary" :disabled="disable || isWeakPassword" @click="onSubmit">保存</el-button>
         <el-button type="default" @click="goBack">返回</el-button>
       </el-form-item>
     </el-form>
@@ -94,10 +91,9 @@ export default {
         }]
       },
       stu: {
-        id: "",
         sname: '',
         birthday: '1981-04-01T16:00:00.000+00:00',
-        gender: '男',
+        gender: '',
         age: '',
         pwd: '',
         email: '',
@@ -105,22 +101,19 @@ export default {
         avatar: 'http://localhost:8080/uploadImg/fba6ae58de8d450ab0d22a77a568bceeuser.jpg'
       },
       rules: {
-        id: [{ required: true, message: 'ID不能为空', trigger: 'blur' }],
         sname: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
         sid: [{ required: true, message: '学号不能为空', trigger: 'blur' }],
-        gender: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
-        age: [{ required: true, message: '年龄不能为空', trigger: 'blur' }],
-        birthday: [{ required: true, message: '生日不能为空', trigger: 'change' }],
         pwd: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
           { min: 6, message: '密码至少6位', trigger: 'blur' }
         ],
-        email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
-        phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }]
+        email: [], // 允许邮箱为空
+        phone: []  // 允许电话为空
       },
       disable: false,
       passwordStrength: '', // 密码强度文本
-      passwordStrengthWidth: '0%' // 条状宽度
+      passwordStrengthWidth: '0%', // 条状宽度
+      isWeakPassword: false // 是否为弱密码
     }
   },
   computed: {
@@ -154,17 +147,18 @@ export default {
     },
     onSubmit() {
       this.$refs.form.validate((valid) => {
-        if (valid) {
+        if (valid && !this.isWeakPassword) {
           this.addInfo(this.stu);
+        } else if (this.isWeakPassword) {
+          this.$message.error('密码强度太弱，请使用更强的密码');
         } else {
           this.$message.error('请完成表单填写');
-          return false;
         }
       });
     },
     addInfo(stu) {
       add(stu).then(response => {
-        this.$alert('你的id是' + this.stu.id + "\n你的密码是" + this.stu.pwd, '注册成功', {
+        this.$alert('你的账号id是' + response.data.id + "\n你的密码是" + this.stu.pwd, '注册成功', {
           confirmButtonText: '确定',
           callback: action => {
             this.$message({
@@ -180,29 +174,32 @@ export default {
       this.$router.go(-1); // 返回上一页
     },
     checkPasswordStrength() {
-  const pwd = this.stu.pwd;
-  const hasLowercase = /[a-z]/.test(pwd);
-  const hasUppercase = /[A-Z]/.test(pwd);
-  const hasNumber = /\d/.test(pwd);
+      const pwd = this.stu.pwd;
+      const hasLowercase = /[a-z]/.test(pwd);
+      const hasUppercase = /[A-Z]/.test(pwd);
+      const hasNumber = /\d/.test(pwd);
 
-  // 1. 判断强密码（优先匹配）
-  if (hasLowercase && hasUppercase && hasNumber && pwd.length > 8) {
-    this.passwordStrength = '强';
-    this.passwordStrengthWidth = '100%';
-  }
-  // 2. 判断中密码
-  else if ((hasLowercase && hasUppercase) ||
-           (hasLowercase && hasNumber) ||
-           (hasUppercase && hasNumber)) {
-    this.passwordStrength = '中';
-    this.passwordStrengthWidth = '66%';
-  }
-  // 3. 判断弱密码
-  else {
-    this.passwordStrength = '弱';
-    this.passwordStrengthWidth = '33%';
-  }
-}
+      // 1. 判断强密码（优先匹配）
+      if (hasLowercase && hasUppercase && hasNumber && pwd.length > 8) {
+        this.passwordStrength = '强';
+        this.passwordStrengthWidth = '100%';
+        this.isWeakPassword = false;
+      }
+      // 2. 判断中密码
+      else if ((hasLowercase && hasUppercase) ||
+               (hasLowercase && hasNumber) ||
+               (hasUppercase && hasNumber)) {
+        this.passwordStrength = '中';
+        this.passwordStrengthWidth = '66%';
+        this.isWeakPassword = false;
+      }
+      // 3. 判断弱密码
+      else {
+        this.passwordStrength = '弱';
+        this.passwordStrengthWidth = '33%';
+        this.isWeakPassword = true;
+      }
+    }
   }
 }
 </script>
@@ -233,3 +230,6 @@ export default {
   margin-top: 5px;
 }
 </style>
+
+
+

@@ -79,7 +79,7 @@
           </div>
           <div>
             <div class="text-item">
-              <el-button @click="handleEdit(course.id)" style="margin-block: 0px" type="primary">注册</el-button>
+              <el-button @click="openRegistrationDialog(course.id)" style="margin-block: 0px" type="primary">注册</el-button>
               <el-button @click="handleEdit2(course.id)" style="margin-block: 0px" type="primary">收藏</el-button>
             </div>
           </div>
@@ -93,6 +93,28 @@
         @size-change="handleSizeChange">
       </el-pagination>
     </el-row>
+
+    <!-- 注册对话框 -->
+    <el-dialog title="注册信息" :visible.sync="registrationDialogVisible" width="30%">
+      <el-form :model="registrationForm" :rules="registrationRules" ref="registrationForm" label-width="100px">
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="registrationForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="学号" prop="sid">
+          <el-input v-model="registrationForm.sid"></el-input>
+        </el-form-item>
+        <el-form-item label="年级" prop="grade">
+          <el-input v-model="registrationForm.grade"></el-input>
+        </el-form-item>
+        <el-form-item label="专业" prop="major">
+          <el-input v-model="registrationForm.major"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="registrationDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitRegistration">提交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -233,6 +255,20 @@ export default {
       input: "",
       sortBy: '', // 默认排序方式为空
       sortOrder: 'desc', // 默认排序方式为降序
+      registrationDialogVisible: false,
+      registrationForm: {
+        name: '',
+        sid: '',
+        grade: '',
+        major: ''
+      },
+      currentCourseId: null,
+      registrationRules: {
+        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+        sid: [{ required: true, message: '学号不能为空', trigger: 'blur' }],
+        grade: [{ required: true, message: '年级不能为空', trigger: 'blur' }],
+        major: [{ required: true, message: '专业不能为空', trigger: 'blur' }]
+      }
     };
   },
   computed: {
@@ -333,6 +369,30 @@ export default {
         return (a[sortKey] - b[sortKey]) * order;
       });
     },
+    openRegistrationDialog(id) {
+      this.currentCourseId = id;
+      this.registrationDialogVisible = true;
+    },
+    submitRegistration() {
+      this.$refs.registrationForm.validate(valid => {
+        if (valid) {
+          // 清空表单并关闭对话框
+          this.registrationForm = {
+            name: '',
+            sid: '',
+            grade: '',
+            major: ''
+          };
+          this.registrationDialogVisible = false;
+
+          // 执行原来的点击操作
+          this.handleEdit(this.currentCourseId);
+        } else {
+          console.log('验证失败');
+          return false;
+        }
+      });
+    }
   },
 };
 </script>

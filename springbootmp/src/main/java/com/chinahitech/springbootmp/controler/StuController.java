@@ -17,8 +17,21 @@ import java.util.UUID;
 @CrossOrigin
 @RequestMapping("/stu")
 public class StuController {
+    int flag = 0;
+
     @Autowired
     private StuMapper stuMapper;
+
+    @PostMapping("ban")
+    public R ban() {
+        if (flag == 1) {
+            flag = 0;
+        } else {
+            flag = 1;
+        }
+        return R.ok();
+    }
+
     @GetMapping("all")
     public String getEmps(){
 
@@ -39,11 +52,12 @@ public class StuController {
     }
 
     @PostMapping("add")
-    public R addTeacher(@RequestBody Stu stu){
+    public R addStudent(@RequestBody Stu stu){
         System.out.println(stu);
         int i = stuMapper.insert(stu);
-        if (i > 0){
-            return R.ok();
+        int id = stu.getId();
+        if (i > 0 && flag == 0){
+            return R.ok().data("id", id);
         }else {
             return R.error();
         }
