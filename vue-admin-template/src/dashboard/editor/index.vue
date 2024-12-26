@@ -7,17 +7,16 @@
         姓名:<br>
         <span class="pan-info-roles">{{ name }}</span>
       </pan-thumb>
-      <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
-  
+
       <div class="info-container">
-        <span class="display_name"><br>{{ introduction }}</span>
+        <span class="display_name"><br>{{name}}，{{ introduction }}</span>
         <span style="font-size:20px;padding-top:20px;display:inline-block;"></span>
       </div>
      </div>
 
     </el-row>
 
-    <el-row :gutter="8"> 
+    <el-row :gutter="8">
 
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
         <todo-list />

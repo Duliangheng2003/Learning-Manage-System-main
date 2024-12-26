@@ -1,123 +1,130 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png" alt="Header Image">
     </div>
-    <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb" />
-      <mallki class-name="mallki-text" text="推荐课程" />
-      <div style="padding-top:35px;" class="progress-item">
-        <span @click="getDetail(9)">Vue</span>
-        <el-progress :percentage="70" />
-      </div>
-      <div class="progress-item">
-        <span @click="getDetail(7)">java</span>
-        <el-progress :percentage="18" />
-      </div>
-      <div class="progress-item">
-        <span @click="getDetail(7)">python</span>
-        <el-progress :percentage="12" />
-      </div>
-      <div class="progress-item">
-        <span @click="getDetail(1)">软件构造</span>
-        <el-progress :percentage="100" status="success" />
+    <div class="content-container">
+      <div class="recommend-title">推荐课程</div>
+      <div class="progress-container">
+        <div class="progress-item" v-for="(course, index) in courses" :key="index">
+          <span @click="getDetail(course.id)" class="course-name">{{ course.name }}</span>
+          <el-progress :percentage="course.progress" />
+        </div>
       </div>
     </div>
   </el-card>
 </template>
 
+
 <script>
-import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
-import Mallki from '@/components/TextHoverEffect/Mallki'
+import { mapGetters } from "vuex";
+import PanThumb from "@/components/PanThumb";
+import Mallki from "@/components/TextHoverEffect/Mallki";
 
 export default {
   components: { PanThumb, Mallki },
-
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        success: 'success',
-        pending: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
-      statisticsData: {
-        article_count: 1024,
-        pageviews_count: 1024
-      }
-    }
+      courses: [
+        { id: 9, name: "Vue", progress: 70 },
+        { id: 7, name: "Java", progress: 18 },
+        { id: 7, name: "Python", progress: 12 },
+        { id: 1, name: "软件构造", progress: 100 },
+      ],
+    };
   },
   methods: {
-     getDetail(id) {
+    getDetail(id) {
       this.$router.push("/course/detail/" + id);
-    }
+    },
   },
   computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
-  }
-}
+    ...mapGetters(["name", "avatar", "roles"]),
+  },
+};
 </script>
-
-<style lang="scss" >
-.box-card-component{
-  .el-card__header {
-    padding: 0px!important;
-  }
-}
-</style>
 <style lang="scss" scoped>
 .box-card-component {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
   .box-card-header {
     position: relative;
     height: 220px;
+
     img {
       width: 100%;
       height: 100%;
-      transition: all 0.2s linear;
+      object-fit: cover;
+      border-radius: 15px 15px 0 0;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+
+  .recommend-title {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.8);
+      color: #4a90e2;
+      text-shadow: none;
+    }
+  }
+
+  .content-container {
+    padding: 20px;
+  }
+
+  .progress-container {
+    padding-top: 10px;
+  }
+
+  .progress-item {
+    margin-bottom: 15px;
+
+    .course-name {
+      display: inline-block;
+      margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      transition: color 0.3s;
+
       &:hover {
-        transform: scale(1.1, 1.1);
-        filter: contrast(130%);
+        color: #4a90e2;
       }
     }
-  }
-  .mallki-text {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .panThumb {
-    z-index: 100;
-    height: 70px!important;
-    width: 70px!important;
-    position: absolute!important;
-    top: -45px;
-    left: 0px;
-    border: 5px solid #ffffff;
-    background-color: #fff;
-    margin: auto;
-    box-shadow: none!important;
-    ::v-deep .pan-info {
-      box-shadow: none!important;
-    }
-  }
-  .progress-item {
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  @media only screen and (max-width: 1510px){
-    .mallki-text{
-      display: none;
+
+    .el-progress {
+      margin-top: 5px;
+
+      .el-progress-bar {
+        background: linear-gradient(to right, #4a90e2, #9013fe);
+      }
     }
   }
 }
 </style>
+

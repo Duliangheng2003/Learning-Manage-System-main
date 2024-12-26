@@ -5,17 +5,17 @@
       :data="tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
       style="width: 100%"
     >
-      <el-table-column label="学生id" width="100">
+      <el-table-column label="学生id" width="80">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学生学号" width="180">
+      <el-table-column label="学生学号" width="130">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.sid }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="160">
+      <el-table-column label="姓名" width="110">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>姓名: {{ scope.row.sname }}</p>
@@ -27,7 +27,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="联系方式" width="180">
+      <el-table-column label="联系方式" width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>邮箱: {{ scope.row.email }}</p>
@@ -38,7 +38,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
           <el-button
@@ -51,18 +51,11 @@
       </el-table-column>
     </el-table>
 
-    <!-- 添加分页，设置 margin-top 来增加间距 -->
-    <div class="pagination-container">
-      <el-pagination
-        background
-        layout="prev, pager, next, sizes, total, jumper"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pagesize"
-        :total="tableData.length"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      >
-      </el-pagination>
+    <!-- 添加查看全部按钮 -->
+    <div class="button-container">
+      <el-button type="primary" @click="toggleView">
+        {{ '查看全部' }}
+      </el-button>
     </div>
   </div>
 </template>
@@ -131,6 +124,9 @@ export default {
           });
         });
     },
+    toggleView() {
+      this.$router.push("/stu/list/");
+    },
   },
 };
 </script>
@@ -144,5 +140,14 @@ export default {
 /* 为分页组件添加额外的间距 */
 .pagination-container {
   margin-top: 20px; /* 可以调整这个值来增加或减少间距 */
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: right; /* 将按钮右对齐 */
+}
+
+.button-container .el-button {
+  margin-right: 15px; /* 增加按钮右侧的间距 */
 }
 </style>

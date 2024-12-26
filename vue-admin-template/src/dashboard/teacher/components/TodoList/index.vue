@@ -1,135 +1,137 @@
 <template>
   <div class="app-container">
+    <!-- 课程列表 start -->
+      <h3>课程列表</h3>
     <el-table
-      :data="
-        tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)
-      "
-      style="width: 100%"
-    >
-      <el-table-column label="学生id" width="80">
+      :data="courses.slice(0, 5)"
+      style="width: 100%">
+      <el-table-column
+        label="序号"
+        width="120">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.id }}</span>
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-       <el-table-column label="学生学号" width="180">
+      <el-table-column
+        label="名称"
+        width="120" prop="name">
+      </el-table-column>
+      <el-table-column
+        label="状态"
+        width="120"
+        prop="status">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.sid }}</span>
+          <span :class="getStatusClass(scope.row.status)">
+            {{ getStatusText(scope.row.status) }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="150">
+      <el-table-column fixed="right"
+        label="操作"
+        width="180">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>姓名: {{ scope.row.sname }}</p>
-            <p>学号：{{ scope.row.sid }}</p>
-            <p>性别：{{ scope.row.gender }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.sname }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="联系方式" width="180">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>邮箱: {{ scope.row.email }}</p>
-            <p>电话: {{ scope.row.phone }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.email }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row.id)"
-            >编辑</el-button
-          >
-          <br>
           <el-button
             size="mini"
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            >删除</el-button
-          >
+            @click="handleEdit(scope.row.id)">编辑</el-button>
+          <el-button
+            size="mini"
+            @click="handleCheck4(scope.row.id)">布置作业</el-button>
+
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      layout="prev, pager, next, sizes, total, jumper"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="pagesize"
-      :total="tableData.length"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    >
-    </el-pagination>
+      <!-- 查看全部按钮 -->
+      <div class="button-container">
+    <el-button type="primary" @click="viewAll">查看全部</el-button>
+  </div>
   </div>
 </template>
 
 <script>
-import { delStu, getStu } from "@/api/stu";
+import { getAll, deleteByID, updateCourseStatus } from '@/api/course';
+
 export default {
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
+    moment(date) {
+      return date;
     },
   },
   data() {
     return {
-      pagesize: 5,
-      currentPage: 1,
-      tableData: [],
+      courses: [],
     };
   },
   created() {
-    this.fetchData();
+    this.getCourses();
   },
   methods: {
-    handleCurrentChange(cpage) {
-      this.currentPage = cpage;
-    },
-    handleSizeChange(psize) {
-      this.pagesize = psize;
-    },
-    handleEdit(id) {
-      // 路由跳转  /emp/save/xxxxxxx"
-      this.$router.push("/stu/save/" + id);
-    },
-    fetchData() {
-      getStu().then((response) => {
-        this.tableData = response.data.items;
+    getCourses() {
+      getAll().then((response) => {
+        this.courses = response.data.items;
       });
     },
+    viewAll() {
+      this.$router.push('/course/list');
+    },
     handleDelete(id) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // 调用api中删除讲师的方法
-          delStu(id).then((response) => {
-            // 删除成功后，重新加载讲员工表
-            this.$router.push("/stu/list/");
-            this.fetchData();
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          });
-        })
-        .catch(() => {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        deleteByID(id).then(() => {
+          this.getCourses();
           this.$message({
-            type: "info",
-            message: "已取消删除",
+            type: 'success',
+            message: '删除成功!',
           });
         });
+      });
+    },
+    handleEdit(id) {
+      this.$router.push('/course/save/' + id);
+    },
+    handleCheck(id) {
+      this.$router.push('/course/students/' + id);
+    },
+    handleCheck2(id) {
+      this.$router.push('/course/materials/' + id);
+    },
+    handleCheck3(id) {
+      this.$router.push('/course/courseware/' + id);
+    },
+    handleCheck4(id) {
+      this.$router.push('/course/assignment/' + id);
+    },
+    togglePublishStatus(id, currentStatus) {
+      if (currentStatus === 0) {
+        this.dialogVisible = true;
+      } else {
+        const newStatus = 0;
+        updateCourseStatus(id, newStatus)
+          .then(() => {
+            this.getCourses();
+            this.$message({
+              type: 'success',
+              message: '状态更新成功!',
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: 'error',
+              message: '状态更新失败!',
+            });
+          });
+      }
+    },
+    getStatusClass(status) {
+      return status === 1 ? 'status-published' : 'status-draft';
+    },
+    getStatusText(status) {
+      return status === 1 ? '已发布' : '待发布';
+    },
+    publishButtonText(status) {
+      return status === 1 ? '撤回发布' : '发布课程';
     },
   },
 };
@@ -140,7 +142,28 @@ export default {
   max-width: 1200px;
   margin: 20px auto;
 }
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.status-published {
+  color: green;
+}
+
+.status-draft {
+  color: gray;
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: right; /* 将按钮右对齐 */
+}
+
+.button-container .el-button {
+  margin-right: 15px; /* 增加按钮右侧的间距 */
+}
 </style>
-
-
-
