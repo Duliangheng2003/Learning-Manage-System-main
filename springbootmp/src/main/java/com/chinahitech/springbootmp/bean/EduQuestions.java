@@ -1,9 +1,11 @@
 package com.chinahitech.springbootmp.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class EduQuestions {
     private int id;
     private int cusId;
@@ -16,7 +18,9 @@ public class EduQuestions {
     private int praiseCount;
 
 
+
     private Date addTime;
+    private int courseId;
 
     public int getId() {
         return id;

@@ -8,8 +8,6 @@
           姓名:<br>
           <span class="pan-info-roles">{{ name }}</span>
         </pan-thumb>
-        <!-- GitHub 角标 -->
-        <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
         <!-- 用户介绍信息 -->
         <div class="info-container">
           <span class="display_name"><br>{{ introduction }}</span>

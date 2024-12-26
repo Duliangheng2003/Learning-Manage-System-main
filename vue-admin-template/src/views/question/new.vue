@@ -114,7 +114,7 @@ export default {
               message: '上传成功!'
             });
             // 跳转到列表页
-            this.$router.push({path:"/question/index"})
+            this.$router.push({path:"/course/discussion" + this.question.courseId})
         })
       },
       updateInfo(question){

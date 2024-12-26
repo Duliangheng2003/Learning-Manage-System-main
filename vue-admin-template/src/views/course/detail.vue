@@ -134,7 +134,7 @@ export default {
       });
     },
     goToQuestionPage() {
-      this.$router.push("/question/index");
+      this.$router.push("/course/discussion/" + this.$route.params.id);
     },
   },
 };
