@@ -42,12 +42,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/course',
-    component: () => import('@/views/course/index'),
-    hidden: true,
-    meta: { requiresAuth: false }
-  },
-  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
@@ -71,6 +65,32 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
  export const userRoutes = [
+  // 游客页面
+  {
+    path: '/guest',
+    component: Layout,
+    redirect: '/guest/index',
+    name: '课程查看页面',
+    meta: { title: '课程页面', icon: 'el-icon-s-help', roles: ['guest']},
+    children: [
+      {
+        path: 'index',
+        name: '课程',
+        component: () => import('@/views/guest/index'),
+        meta: { title: '课程', icon: 'table' }
+      },
+
+      {
+        path: 'detail/:id',
+        name: '课程详情',
+        component: () => import('@/views/guest/detail'),
+        meta: { title: '课程详情', icon: 'table'},
+        hidden:true
+      }
+    ]
+  },
+
+
   {
     path: '/stu',
     component: Layout,
@@ -107,15 +127,15 @@ export const constantRoutes = [
       },
       {
         path: 'myquestions',
-        name: '我的提问',
+        name: '我的讨论',
         component: () => import('@/views/stu/myquestions'),
-        meta: { title: '我的提问', icon: 'tree' }
+        meta: { title: '我的讨论', icon: 'tree' }
       },
       {
         path: 'myanswers',
-        name: '我的回答',
+        name: '我的回复',
         component: () => import('@/views/stu/myanswers'),
-        meta: { title: '我的回答', icon: 'tree' }
+        meta: { title: '我的回复', icon: 'tree' }
       }
     ]
   },
@@ -207,73 +227,6 @@ export const constantRoutes = [
       }
     ]
   },
-
-  // {
-  //   path: '/question',
-  //   component: Layout,
-  //   redirect: '/question/index',
-  //   name: '问答',
-  //   meta: { title: '讨论区', icon: 'el-icon-s-help' , roles: ['student']},
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: '问题',
-  //       component: () => import('@/views/question/index'),
-  //       meta: { title: '问题', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'detail/:id',
-  //       name: '问题详情',
-  //       component: () => import('@/views/question/detail'),
-  //       meta: { title: '问题详情', icon: 'table' },
-  //       hidden:true
-  //     },
-  //     {
-  //       path: 'new',
-  //       name: '提问',
-  //       component: () => import('@/views/question/new'),
-  //       meta: { title: '提问', icon: 'tree' }
-  //     },
-  //     {
-  //       path: 'myquestions',
-  //       name: '我的提问',
-  //       component: () => import('@/views/question/myquestions'),
-  //       meta: { title: '我的提问', icon: 'tree' }
-  //     },
-  //     {
-  //       path: 'myanswers',
-  //       name: '我的回答',
-  //       component: () => import('@/views/question/myanswers'),
-  //       meta: { title: '我的回答', icon: 'tree' }
-  //     },
-  //     {
-  //       // 跳转时,需要传入id
-  //       path: 'new/:id',
-  //       name: '修改提问',
-  //       component: () => import('@/views/question/new'),
-  //       meta: { title: '修改提问', icon: 'tree' },
-  //       hidden:true
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/answer',
-  //   component: Layout,
-  //   redirect: '/answer',
-  //   name: '回答',
-  //   meta: { title: '回答页面', icon: 'el-icon-s-help' , roles: ['student']},
-  //   hidden:true,
-  //   children: [
-  //     {
-  //       // 跳转时,需要传入id
-  //       path: 'new/:id',
-  //       name: '修改回答',
-  //       component: () => import('@/views/answer/new'),
-  //       meta: { title: '修改回答', icon: 'tree' },
-  //       hidden:true
-  //     }
-  //   ]
-  // },
 
   /**
    * 教师页面部分
@@ -406,17 +359,6 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -464,56 +406,21 @@ export const asyncRoutes = [
     path: '/question',
     component: Layout,
     redirect: '/question/list',
-    name: '提问页面管理',
-    meta: { title: '提问页面管理', icon: 'el-icon-s-help' },
+    name: '讨论管理',
+    meta: { title: '讨论管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'list',
-        name: '提问展示列表',
+        name: '讨论列表',
         component: () => import('@/views/question/list'),
-        meta: { title: '提问展示列表', icon: 'table' }
-      },
-      {
-        path: 'save',
-        name: '提问上传',
-        component: () => import('@/views/question/save'),
-        meta: { title: '提问上传', icon: 'tree' }
+        meta: { title: '讨论列表', icon: 'table' }
       },
       {
         // 跳转时,需要传入id
         path: 'save/:id',
-        name: '修改提问',
+        name: '修改讨论',
         component: () => import('@/views/question/save'),
-        meta: { title: '修改提问', icon: 'tree' },
-        hidden:true
-      }
-    ]
-  },
-  {
-    path: '/answer',
-    component: Layout,
-    redirect: '/answer/list',
-    name: '回答页面管理',
-    meta: { title: '回答页面管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'list',
-        name: '回答展示列表',
-        component: () => import('@/views/answer/list'),
-        meta: { title: '回答展示列表', icon: 'table' }
-      },
-      {
-        path: 'save',
-        name: '回答上传',
-        component: () => import('@/views/answer/save'),
-        meta: { title: '问答上传', icon: 'tree' }
-      },
-      {
-        // 跳转时,需要传入id
-        path: 'save/:id',
-        name: '修改回答',
-        component: () => import('@/views/answer/save'),
-        meta: { title: '修改回答', icon: 'tree' },
+        meta: { title: '修改讨论', icon: 'tree' },
         hidden:true
       }
     ]

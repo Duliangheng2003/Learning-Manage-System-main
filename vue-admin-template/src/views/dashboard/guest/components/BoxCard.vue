@@ -1,26 +1,26 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-      <img src="http://localhost:8080/uploadImg/31ada027fe684231a47d6189938280bdsafe.jpg">
+      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
     </div>
     <div style="position:relative;">
       <pan-thumb :image="avatar" class="panThumb" />
       <mallki class-name="mallki-text" text="推荐课程" />
       <div style="padding-top:35px;" class="progress-item">
-        <span @click="getDetail(7)">计算机安全导论</span>
-        <el-progress :percentage="100" status="success"/>
-      </div>
-      <div class="progress-item">
-        <span @click="getDetail(6)">计算机网络</span>
+        <span @click="getDetail(9)">Vue</span>
         <el-progress :percentage="70" />
       </div>
       <div class="progress-item">
-        <span @click="getDetail(4)">大数据行业与创新创业对接范式</span>
-        <el-progress :percentage="65" />
+        <span @click="getDetail(7)">java</span>
+        <el-progress :percentage="18" />
       </div>
       <div class="progress-item">
-        <span @click="getDetail(9)">多媒体技术及应用</span>
-        <el-progress :percentage="40" />
+        <span @click="getDetail(7)">python</span>
+        <el-progress :percentage="12" />
+      </div>
+      <div class="progress-item">
+        <span @click="getDetail(1)">软件构造</span>
+        <el-progress :percentage="100" status="success" />
       </div>
     </div>
   </el-card>

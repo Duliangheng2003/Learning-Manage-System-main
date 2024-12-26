@@ -1,6 +1,5 @@
 <template>
     <div id="all">
-        <el-button @click="handleClick" type="primary">返回</el-button>
         <div @click="getDetail(question.id)"
         v-for="question in questions.slice((currentPage - 1) * pagesize, currentPage * pagesize)" :key="question.id">
             <el-card shadow="hover" class="question" type="primary">

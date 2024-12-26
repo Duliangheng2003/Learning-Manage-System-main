@@ -1,10 +1,7 @@
 <template>
   <div class="app-container">
     <h3>学生列表</h3>
-    <el-table
-      :data="tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
-      style="width: 100%"
-    >
+    <el-table :data="filteredTableData.slice(0, 5)" style="width: 100%">
       <el-table-column label="学生id" width="100">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
@@ -41,28 +38,14 @@
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            >删除</el-button
-          >
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 添加分页，设置 margin-top 来增加间距 -->
-    <div class="pagination-container">
-      <el-pagination
-        background
-        layout="prev, pager, next, sizes, total, jumper"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pagesize"
-        :total="tableData.length"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      >
-      </el-pagination>
+    <!-- 添加“查看更多”按钮 -->
+    <div style="text-align: center; margin-top: 20px;">
+      <el-button type="primary" @click="viewAllStudents">查看更多</el-button>
     </div>
   </div>
 </template>
@@ -82,29 +65,29 @@ export default {
   },
   data() {
     return {
-      pagesize: 5,
-      currentPage: 1,
       tableData: [],
     };
   },
   created() {
     this.fetchData();
   },
+  computed: {
+    filteredTableData() {
+      return this.tableData.filter(item => item.type !== 1 && item.type !== 2);
+    }
+  },
   methods: {
-    handleCurrentChange(cpage) {
-      this.currentPage = cpage;
-    },
-    handleSizeChange(psize) {
-      this.pagesize = psize;
-    },
-    handleEdit(id) {
-      // 路由跳转  /emp/save/xxxxxxx"
-      this.$router.push("/stu/save/" + id);
-    },
     fetchData() {
       getStu().then((response) => {
         this.tableData = response.data.items;
       });
+    },
+    viewAllStudents() {
+      this.$router.push("/stu/list/");
+    },
+    handleEdit(id) {
+      // 路由跳转  /emp/save/xxxxxxx"
+      this.$router.push("/stu/save/" + id);
     },
     handleDelete(id) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -137,7 +120,6 @@ export default {
 
 <style scoped>
 .app-container {
-  max-width: 1200px;
   margin: 20px auto;
 }
 

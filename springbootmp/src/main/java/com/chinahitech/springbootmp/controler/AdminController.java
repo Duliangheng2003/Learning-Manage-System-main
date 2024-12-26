@@ -57,28 +57,35 @@ public class AdminController {
         map.put("code",20000);
 
         HashMap data = new HashMap<>();
-        if(!token.equals("admin"))
+        if (token.equals("guest")){
+            data.put("roles", new String[]{"guest"});
+            data.put("name","游客");
+            data.put("introduction","这里是游客页面");
+            data.put("avatar","http://localhost:8080/uploadImg/fba6ae58de8d450ab0d22a77a568bceeuser.jpg");
+        }
+        else if (token.equals("admin"))
+        {
+            data.put("roles","admin");
+            data.put("name","管理员");
+            data.put("introduction","管理员 欢迎来到后台管理系统");
+            data.put("avatar","http://localhost:8080/uploadImg/fba6ae58de8d450ab0d22a77a568bceeuser.jpg");
+
+        }
+        else
         {
             Stu stu = stuMapper.selectById(token);
             if (stu.getType() == 0) {
                 data.put("roles", new String[]{"student"});
                 data.put("name",stu.getSname());
-                data.put("introduction","欢迎来到学生端主页，你可以在左侧导航栏中浏览相关信息");
+                data.put("sid", stu.getSid());
+                data.put("introduction","欢迎, " + stu.getSname() + ", 这里是学生端主页");
                 data.put("avatar",stu.getAvatar());
             } else {
                 data.put("roles", new String[]{"teacher"});
                 data.put("name",stu.getSname());
-                data.put("introduction","欢迎来到教师端主页，你可以在左侧导航栏中浏览相关信息");
+                data.put("introduction","欢迎, " + stu.getSname() + ", 这里是教师端主页");
                 data.put("avatar",stu.getAvatar());
             }
-
-        }
-       else
-        {
-            data.put("roles","admin");
-            data.put("name","管理员   ≥Ö‿Ö≤欢迎来到后台管理系统");
-            data.put("introduction","I am a admin");
-            data.put("avatar","https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
 
         }
         map.put("code",20000);

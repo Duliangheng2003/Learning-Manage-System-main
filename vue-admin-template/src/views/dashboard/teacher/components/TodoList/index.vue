@@ -1,17 +1,12 @@
 <template>
   <div class="app-container">
-    <el-table
-      :data="
-        tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)
-      "
-      style="width: 100%"
-    >
+    <el-table :data="filteredTableData.slice(0, 5)" style="width: 100%">
       <el-table-column label="学生id" width="80">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-       <el-table-column label="学生学号" width="180">
+      <el-table-column label="学生学号" width="180">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.sid }}</span>
         </template>
@@ -39,31 +34,11 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row.id)"
-            >编辑</el-button
-          >
-          <br>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      layout="prev, pager, next, sizes, total, jumper"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="pagesize"
-      :total="tableData.length"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    >
-    </el-pagination>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <el-button type="primary" @click="viewAllStudents">查看更多</el-button>
+    </div>
   </div>
 </template>
 
@@ -82,29 +57,29 @@ export default {
   },
   data() {
     return {
-      pagesize: 5,
-      currentPage: 1,
       tableData: [],
     };
   },
   created() {
     this.fetchData();
   },
+  computed: {
+    filteredTableData() {
+      return this.tableData.filter(item => item.type !== 0 && item.type !== 2);
+    }
+  },
   methods: {
-    handleCurrentChange(cpage) {
-      this.currentPage = cpage;
-    },
-    handleSizeChange(psize) {
-      this.pagesize = psize;
-    },
-    handleEdit(id) {
-      // 路由跳转  /emp/save/xxxxxxx"
-      this.$router.push("/stu/save/" + id);
-    },
     fetchData() {
       getStu().then((response) => {
         this.tableData = response.data.items;
       });
+    },
+    viewAllStudents() {
+      this.$router.push("/stu/list/");
+    },
+    handleEdit(id) {
+      // 路由跳转  /emp/save/xxxxxxx"
+      this.$router.push("/stu/save/" + id);
     },
     handleDelete(id) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {

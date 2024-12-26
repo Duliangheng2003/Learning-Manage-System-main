@@ -10,27 +10,6 @@
   <el-form-item label="内容" >
     <el-input type="textarea" v-model="question.content" :autosize="{ minRows: 4 }"></el-input>
   </el-form-item>
-  <el-form-item label="类型">
-    <el-select v-model="question.type" placeholder="请选择">
-          <el-option label="其它" value=0></el-option>
-      <el-option label="数学" value=1></el-option>
-      <el-option label="计算机" value=2></el-option>
-      <el-option label="语文" value=3></el-option>
-      <el-option label="英语" value=4></el-option>
-      <el-option label="物理" value=5></el-option>
-      <el-option label="化学" value=6></el-option>
-      <el-option label="地理" value=7></el-option>
-      <el-option label="历史" value=8></el-option>
-      <el-option label="政治" value=9></el-option>
-    </el-select>
-  </el-form-item>
-   <el-form-item label="状态">
-    <el-select v-model="question.status" placeholder="请选择">
-          
-      <el-option label="已解决" value=0></el-option>
-      <el-option label="未解决" value=1></el-option>
-    </el-select>
-  </el-form-item>
   <el-form-item>
     <el-button type="primary" :disabled="disable" @click="onSubmit">保存</el-button>
   </el-form-item>

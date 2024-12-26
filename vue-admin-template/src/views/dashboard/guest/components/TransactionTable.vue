@@ -17,13 +17,13 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="success"
+            type="danger"
             @click="handleDelete(scope.row.id)">退课</el-button>
         </template>
          <template slot-scope="scope">
           <el-button
             size="mini"
-            type="success"
+            type="danger"
             @click="getDetail(scope.row.id)">查看细节</el-button>
         </template>
       </el-table-column>
@@ -48,7 +48,7 @@
          <template slot-scope="scope">
           <el-button
             size="mini"
-            type="success"
+            type="danger"
             @click="getDetail(scope.row.id)">查看细节</el-button>
         </template>
       </el-table-column>
