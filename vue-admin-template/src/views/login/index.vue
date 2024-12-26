@@ -1,9 +1,7 @@
 <template>
   <div class="login-container">
     <div class="form-container">
-      <el-row>
-        <el-button @click="addLogin" type="primary" icon="el-icon-edit" circle class="edit-btn"></el-button>
-      </el-row>
+     
       <el-row>
         <el-form
           ref="loginForm"
@@ -14,7 +12,7 @@
           label-position="left"
         >
           <div class="title-container">
-            <h3 class="title">Welcome Back</h3>
+            <h3 class="title">Login</h3>
           </div>
 
           <el-form-item prop="username">
@@ -81,10 +79,9 @@
             Don't have an account? Register now
           </el-button>
           <el-button
-           :loading="loading"
             type="text"
             class="guest-button"
-            @click.native.prevent="handleGuestAccess"
+            @click="handleGuestAccess"
           >Visit as GUEST
         </el-button>
         </el-form>
@@ -119,6 +116,9 @@ export default {
         callback(new Error("The password can not be less than 6 digits"));
       }
       else if ((value == "123456") && this.loginForm.username == "admin") {
+        callback();
+      }
+      else if ((value == "123456") && this.loginForm.username == "guest") {
         callback();
       }
       else if ((value != this.stu.pwd) && this.check) {
@@ -175,7 +175,21 @@ export default {
       });
     },
     handleGuestAccess() {
-     this.$router.push("/stu/reg");
+      this.loginForm.username = "guest";
+      this.loginForm.password = "123456";
+      this.getInfo(this.loginForm.username);
+      this.check = 1;
+      this.loading = true;
+      let redirectPath = "/";
+      this.$store
+        .dispatch("user/login", this.loginForm)
+        .then(() => {
+          this.$router.push({ path: this.redirect || redirectPath  });
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     redirectToRegister() {
       this.$router.push("/stu/reg/");

@@ -15,7 +15,12 @@
     </el-table-column>
     <el-table-column
       prop="cusId"
-      label="提问者id"
+      label="发布者id"
+      width="80">
+    </el-table-column>
+    <el-table-column
+      prop="courseId"
+      label="课程id"
       width="80">
     </el-table-column>
     <el-table-column
@@ -29,39 +34,24 @@
       width="300"
       show-overflow-tooltip>
     </el-table-column>
-    <el-table-column
-      label="类型"
-      width="100">
-       <template slot-scope="scope">
-      {{scope.row.type == 1 ? "数学" : scope.row.type == 2? "计算机": scope.row.type == 3? "语文": scope.row.type == 4? "英语": scope.row.type == 5? 
-      "物理": scope.row.type == 6? "化学": scope.row.type == 7? "地理": scope.row.type == 8? "历史": scope.row.type == 9? "地理":"其它"}}
-       </template>
-    </el-table-column>
-    <el-table-column
-      label="状态"
-      width="120"> 
-      <template slot-scope="scope">
-      {{scope.row.status == 1 ? "解决":"没解决"}}
-       </template>
-    </el-table-column>
    
     <el-table-column
       prop="replyCount"
-      label="回复数量"
+      label="回复数"
       width="120">
     </el-table-column>
     <el-table-column
       prop="browseCount"
-      label="浏览数量"
+      label="浏览数"
       width="120">
     </el-table-column>
     <el-table-column
       prop="praiseCount"
-      label="点赞数量"
+      label="点赞数"
       width="120">
     </el-table-column>
 
-    <el-table-column label="最后编辑时间" width="120">
+    <el-table-column label="更新时间" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{

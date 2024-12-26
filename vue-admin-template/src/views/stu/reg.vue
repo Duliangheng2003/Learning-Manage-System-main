@@ -102,7 +102,7 @@ export default {
         pwd: '',
         email: '',
         phone: '',
-        avatar: 'http://localhost:8080/uploadImg/7d2b27fd19ed45ee85d28145bc18bc70QQ图片20210805011645.jpg'
+        avatar: 'http://localhost:8080/uploadImg/fba6ae58de8d450ab0d22a77a568bceeuser.jpg'
       },
       rules: {
         id: [{ required: true, message: 'ID不能为空', trigger: 'blur' }],

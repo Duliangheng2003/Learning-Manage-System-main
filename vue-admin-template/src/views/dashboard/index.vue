@@ -9,10 +9,11 @@ import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
 import editorDashboard from './editor'
 import teacherDashboard from './teacher'
+import guestDashboard from './guest'
 
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard, teacherDashboard },
+  components: { adminDashboard, editorDashboard, teacherDashboard, guestDashboard },
   data() {
     return {
       currentRole: 'adminDashboard'  // 默认角色
@@ -28,6 +29,9 @@ export default {
     // 教师角色
     if (this.roles.includes('teacher')) {
       this.currentRole = 'teacherDashboard'
+    }
+    if (this.roles.includes('guest')) {
+      this.currentRole = 'guestDashboard'
     }
     if (this.roles.includes('student')) {
       this.currentRole = 'editorDashboard'

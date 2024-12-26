@@ -16,10 +16,10 @@
             @click="likeCourse(course.id)"
             style="margin-top: 10px"
             icon="el-icon-thumb"
-            >{{ course.zan }} </el-button
+            >{{ course.zan }}</el-button
           >
           <span class="view-count">
-            <i class="el-icon-view"></i> {{ course.through }} 
+            <i class="el-icon-view"></i> {{ course.through }}
           </span>
         </el-space>
       </div>
@@ -28,13 +28,6 @@
       <h2>课程简介</h2>
       <p>{{ course.title }}</p>
     </div>
-    <el-button
-      type="primary"
-      @click="goToQuestionPage"
-      style="margin-top: 30px; margin-bottom: 30px"
-    >
-      讨论区
-    </el-button>
   </div>
 </template>
 
@@ -132,10 +125,7 @@ export default {
       likeCourse(qid).then(() => {
         this.fetchData(this.$route.params.id);
       });
-    },
-    goToQuestionPage() {
-      this.$router.push("/course/discussion/" + this.$route.params.id);
-    },
+    }
   },
 };
 </script>

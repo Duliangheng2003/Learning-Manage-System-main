@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     filteredTableData() {
-      return this.tableData.filter(row => row.type !== 1);
+      return this.tableData.filter(row => row.type !== 1 && row.type !== 2);
     }
   },
   created() {

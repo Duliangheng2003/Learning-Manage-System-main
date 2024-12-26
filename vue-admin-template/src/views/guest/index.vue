@@ -77,12 +77,6 @@
           <div class="text-item truncate hover-show-full" :title="course.title">
             {{ course.title }}
           </div>
-          <div>
-            <div class="text-item">
-              <el-button @click="handleEdit(course.id)" style="margin-block: 0px" type="primary">注册</el-button>
-              <el-button @click="handleEdit2(course.id)" style="margin-block: 0px" type="primary">收藏</el-button>
-            </div>
-          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -261,7 +255,7 @@ export default {
       });
     },
     getDetail(id) {
-      this.$router.push("/course/detail/" + id);
+      this.$router.push("/guest/detail/" + id);
     },
     handleSizeChange(psize) {
       this.pagesize = psize;
@@ -306,7 +300,7 @@ export default {
           type: "success",
           message: "添加成功!",
         });
-        this.$router.push({ path: "/course/index" });
+        this.$router.push({ path: "/guest/index" });
       });
     },
     handleEdit2(id) {
@@ -316,7 +310,7 @@ export default {
           type: "success",
           message: "添加成功!",
         });
-        this.$router.push({ path: "/course/index" });
+        this.$router.push({ path: "/guest/index" });
       });
     },
     applySorting() {

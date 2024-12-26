@@ -1,75 +1,45 @@
 <template>
   <div class="dashboard-editor-container">
-    <github-corner class="github-corner" />
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+    <!-- 第一行，包含用户头像、姓名、角色和介绍信息 -->
+    <el-row style="background:#fff; padding:16px 16px 0; margin-bottom:16px;">
+      <div class="clearfix">
+        <!-- 用户头像和姓名 -->
+        <div class="avatar-container" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">
+          <img :src="avatar" alt="Avatar" class="avatar-image">
+          <div v-if="showTooltip" class="tooltip">
+            <span>我是管理员</span>
+          </div>
+        </div>
+        <!-- 用户介绍信息 -->
+        <div class="info-container">
+          <span class="display_name">{{ name }}</span>
+          <span class="introduction">{{ introduction }}</span>
+        </div>
+      </div>
     </el-row>
 
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
 <script>
-import GithubCorner from '@/components/GithubCorner'
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  article: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-}
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'DashboardAdmin',
-  components: {
-    GithubCorner,
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart
-  },
+  name: 'TeacherDashboard',
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3',
+      showTooltip: false
     }
   },
-  methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    }
+  computed: {
+    ...mapGetters([
+      'name',
+      'avatar',
+      'introduction',
+      'roles',
+      'sid' // 假设 Vuex 中有 sid 这个字段
+    ])
   }
 }
 </script>
@@ -92,11 +62,75 @@ export default {
     padding: 16px 16px 0;
     margin-bottom: 32px;
   }
+
+  .avatar-container {
+    position: relative;
+    float: left;
+    margin-right: 20px;
+
+    .avatar-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+    }
+
+    .avatar-image:hover {
+      transform: scale(1.1);
+      filter: contrast(130%);
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      white-space: nowrap;
+      z-index: 1;
+      text-align: center;
+    }
+  }
+
+  .info-container {
+    display: inline-block;
+    vertical-align: middle;
+
+    .display_name {
+      font-size: 24px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .introduction {
+      font-size: 20px;
+      color: #606266;
+    }
+  }
 }
 
 @media (max-width:1024px) {
   .chart-wrapper {
     padding: 8px;
+  }
+
+  .avatar-container {
+    margin-right: 10px;
+  }
+
+  .info-container {
+    .display_name {
+      font-size: 20px;
+    }
+
+    .introduction {
+      font-size: 16px;
+    }
   }
 }
 </style>
